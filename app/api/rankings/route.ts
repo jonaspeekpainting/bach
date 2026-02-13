@@ -107,17 +107,7 @@ export async function POST(request: NextRequest) {
           const apiUrl = `https://api.vercel.com/v1/edge-config/${edgeConfigId}/items`;
           console.log("API URL:", apiUrl);
           
-          const requestBody = {
-            items: [
-              {
-                operation: "update",
-                key: "rankings",
-                value: updated,
-              },
-            ],
-          };
-          
-          const requestBodySize = JSON.stringify(requestBody).length;
+          const requestBodySize = JSON.stringify(updated).length;
           console.log("Request body size:", requestBodySize, "bytes");
           console.log("Number of items to save:", updated.length);
           
@@ -126,40 +116,77 @@ export async function POST(request: NextRequest) {
             console.warn("Request body is large:", requestBodySize, "bytes (limit: 256KB)");
           }
           
-          const response = await fetch(apiUrl, {
-            method: "PATCH",
-            headers: {
-              Authorization: `Bearer ${vercelToken}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestBody),
-          });
-
-          console.log("Edge Config API response status:", response.status);
-          console.log("Edge Config API response headers:", Object.fromEntries(response.headers.entries()));
+          // Try update first, then create if item doesn't exist
+          let operation = "update";
+          let response: Response;
+          let attempt = 0;
+          const maxAttempts = 2;
           
-          if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Error writing to Edge Config:");
-            console.error("  Status:", response.status);
-            console.error("  Status Text:", response.statusText);
-            console.error("  Error Body:", errorText);
+          while (attempt < maxAttempts) {
+            attempt++;
+            console.log(`Attempt ${attempt}: Using operation "${operation}"`);
             
-            // Try to parse error as JSON for better logging
-            try {
-              const errorJson = JSON.parse(errorText);
-              console.error("  Error JSON:", JSON.stringify(errorJson, null, 2));
-            } catch {
-              // Not JSON, already logged as text
-            }
-          } else {
-            writeSuccess = true;
-            console.log("Successfully wrote to Edge Config!");
-            try {
-              const responseData = await response.json();
-              console.log("Edge Config API response:", JSON.stringify(responseData, null, 2));
-            } catch {
-              console.log("Edge Config API response: (no JSON body)");
+            const requestBody = {
+              items: [
+                {
+                  operation: operation,
+                  key: "rankings",
+                  value: updated,
+                },
+              ],
+            };
+            
+            response = await fetch(apiUrl, {
+              method: "PATCH",
+              headers: {
+                Authorization: `Bearer ${vercelToken}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(requestBody),
+            });
+
+            console.log("Edge Config API response status:", response.status);
+            
+            if (response.ok) {
+              writeSuccess = true;
+              console.log(`Successfully wrote to Edge Config using "${operation}" operation!`);
+              try {
+                const responseData = await response.json();
+                console.log("Edge Config API response:", JSON.stringify(responseData, null, 2));
+              } catch {
+                console.log("Edge Config API response: (no JSON body)");
+              }
+              break;
+            } else {
+              const errorText = await response.text();
+              let errorJson: any = null;
+              
+              try {
+                errorJson = JSON.parse(errorText);
+              } catch {
+                // Not JSON
+              }
+              
+              // If update failed because item doesn't exist, try create
+              if (
+                response.status === 400 &&
+                errorJson?.error?.message?.includes("non-existing") &&
+                operation === "update"
+              ) {
+                console.log("Item doesn't exist yet, will try 'create' operation");
+                operation = "create";
+                continue; // Retry with create
+              }
+              
+              // Otherwise, log the error and stop
+              console.error("Error writing to Edge Config:");
+              console.error("  Status:", response.status);
+              console.error("  Status Text:", response.statusText);
+              console.error("  Error Body:", errorText);
+              if (errorJson) {
+                console.error("  Error JSON:", JSON.stringify(errorJson, null, 2));
+              }
+              break;
             }
           }
         }
