@@ -372,6 +372,7 @@ export function RankingForm() {
           loading={loading}
           fullWidth
           style={{ zIndex: 1000, position: "relative" }}
+          mb="md"
         >
           Submit Rankings
         </Button>
