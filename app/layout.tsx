@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { MantineProvider, createTheme } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "./globals.css";
+import { ViewportHeightHandler } from "@/components/ViewportHeightHandler";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         style={{ background: "#0a0a0a", minHeight: "100vh" }}
       >
+        <ViewportHeightHandler />
         <MantineProvider theme={theme}>
           {children}
         </MantineProvider>

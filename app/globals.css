@@ -25,7 +25,7 @@ body {
 
 /* Fix footer to bottom on mobile devices */
 @media (max-width: 47.99em) {
-  /* Ensure footer stays fixed at bottom on iOS */
+  /* Ensure footer stays fixed at bottom, adapting to browser bar visibility */
   [data-mantine-component="AppShell.Footer"] {
     position: fixed !important;
     bottom: 0 !important;
@@ -37,7 +37,14 @@ body {
   }
   
   /* Add padding to main content to account for fixed footer */
+  /* Use CSS variable for dynamic viewport height that adapts to browser bar */
   [data-mantine-component="AppShell.Main"] {
     padding-bottom: calc(60px + env(safe-area-inset-bottom)) !important;
+    min-height: calc(var(--vh, 1vh) * 100 - 60px) !important;
+  }
+  
+  /* Ensure body uses dynamic viewport height */
+  body {
+    min-height: calc(var(--vh, 1vh) * 100);
   }
 }
