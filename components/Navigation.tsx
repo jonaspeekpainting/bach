@@ -83,6 +83,8 @@ export function Navigation({ opened, toggle }: NavigationProps) {
           left: 0,
           right: 0,
           zIndex: 1000,
+          // Ensure it stays at the bottom of visual viewport
+          willChange: "transform",
         }}
       >
         <Group justify="space-around" gap={0} wrap="nowrap">
