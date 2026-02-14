@@ -24,7 +24,6 @@ export function Navigation({ opened, toggle }: NavigationProps) {
     { label: "Rankings", href: "/rankings", icon: IconTrophy },
     { label: "Leaderboard", href: "/leaderboard", icon: IconChartBar },
     { label: "Games", href: "/games", icon: IconDice },
-    { label: "Resources", href: "/resources", icon: IconBook },
   ];
 
   return (
@@ -137,8 +136,7 @@ export function MobileHeader() {
   const title = pathname === "/schedule" ? "Schedule" : 
                 pathname === "/rankings" ? "Rankings" : 
                 pathname === "/leaderboard" ? "Leaderboard" :
-                pathname === "/games" ? "Games" :
-                pathname === "/resources" ? "Resources" : "App";
+                pathname === "/games" ? "Games" : "App";
 
   return (
     <AppShell.Header hiddenFrom="sm" p="md">
