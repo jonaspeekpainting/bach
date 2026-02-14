@@ -13,20 +13,24 @@
 }
 
 html {
-  background: #0a0a0a;
+  background: #0a0a0a !important;
 }
 
 body {
-  background: #0a0a0a;
+  background: #0a0a0a !important;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
 
+/* Ensure all Mantine components use dark background */
+[data-mantine-color-scheme] {
+  background-color: #0a0a0a !important;
+}
+
 /* Fix footer to bottom on mobile devices */
 @media (max-width: 47.99em) {
   /* Ensure footer stays fixed at bottom of visual viewport */
-  /* Using position fixed with bottom 0 should work, but we ensure it's always at viewport bottom */
   [data-mantine-component="AppShell.Footer"] {
     position: fixed !important;
     bottom: 0 !important;
@@ -37,14 +41,25 @@ body {
     padding-bottom: env(safe-area-inset-bottom) !important;
     /* Ensure it stays at the bottom edge */
     margin-bottom: 0 !important;
+    /* Ensure footer has dark background */
+    background-color: #0a0a0a !important;
   }
   
   /* Add consistent padding to main content to account for fixed footer */
-  /* This padding stays constant - 60px footer height + safe area */
+  /* This padding stays constant - 60px footer height + safe area + extra margin */
   [data-mantine-component="AppShell.Main"] {
-    padding-bottom: calc(60px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
     /* Ensure content can scroll properly */
     min-height: 0 !important;
+    /* Prevent content from overlapping footer */
+    margin-bottom: 0 !important;
+    /* Ensure main has dark background */
+    background-color: #0a0a0a !important;
+  }
+  
+  /* Ensure containers inside main also respect the footer space */
+  [data-mantine-component="AppShell.Main"] [data-mantine-component="Container"] {
+    padding-bottom: 0 !important;
   }
   
   /* Ensure body uses dynamic viewport height for proper layout */
@@ -52,11 +67,18 @@ body {
     min-height: calc(var(--vh, 1vh) * 100);
     /* Prevent body from extending beyond viewport */
     overflow-x: hidden;
+    background: #0a0a0a !important;
   }
   
   /* Ensure html uses full height */
   html {
     height: 100%;
     overflow-x: hidden;
+    background: #0a0a0a !important;
+  }
+  
+  /* Ensure AppShell uses dark background */
+  [data-mantine-component="AppShell"] {
+    background-color: #0a0a0a !important;
   }
 }
