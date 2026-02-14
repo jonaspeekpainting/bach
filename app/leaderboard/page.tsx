@@ -24,60 +24,75 @@ export default function LeaderboardPage() {
             <Tabs.Tab
               value="leaderboard"
               leftSection={<IconTrophy size={20} />}
-              styles={{
-                label: {
+            >
+              <Box 
+                component="span" 
+                hiddenFrom="sm"
+                style={{
                   fontSize: "var(--mantine-font-size-xs)",
                   whiteSpace: "nowrap",
-                  "@media (min-width: 36em)": {
-                    fontSize: "var(--mantine-font-size-sm)",
-                  },
-                },
-              }}
-            >
-              <Box component="span" hiddenFrom="sm">
+                }}
+              >
                 Board
               </Box>
-              <Box component="span" visibleFrom="sm">
+              <Box 
+                component="span" 
+                visibleFrom="sm"
+                style={{
+                  fontSize: "var(--mantine-font-size-sm)",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 Leaderboard
               </Box>
             </Tabs.Tab>
             <Tabs.Tab 
               value="enter" 
               leftSection={<IconEdit size={20} />}
-              styles={{
-                label: {
+            >
+              <Box 
+                component="span" 
+                hiddenFrom="sm"
+                style={{
                   fontSize: "var(--mantine-font-size-xs)",
                   whiteSpace: "nowrap",
-                  "@media (min-width: 36em)": {
-                    fontSize: "var(--mantine-font-size-sm)",
-                  },
-                },
-              }}
-            >
-              <Box component="span" hiddenFrom="sm">
+                }}
+              >
                 Enter
               </Box>
-              <Box component="span" visibleFrom="sm">
+              <Box 
+                component="span" 
+                visibleFrom="sm"
+                style={{
+                  fontSize: "var(--mantine-font-size-sm)",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 Enter Points
               </Box>
             </Tabs.Tab>
             <Tabs.Tab 
               value="teams" 
               leftSection={<IconUsers size={20} />}
-              styles={{
-                label: {
+            >
+              <Box 
+                component="span" 
+                hiddenFrom="sm"
+                style={{
                   fontSize: "var(--mantine-font-size-xs)",
                   whiteSpace: "nowrap",
-                  "@media (min-width: 36em)": {
-                    fontSize: "var(--mantine-font-size-sm)",
-                  },
-                },
-              }}
-            >
-              <Box component="span" hiddenFrom="sm">
+                }}
+              >
                 Teams
               </Box>
-              <Box component="span" visibleFrom="sm">
+              <Box 
+                component="span" 
+                visibleFrom="sm"
+                style={{
+                  fontSize: "var(--mantine-font-size-sm)",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 Team Names
               </Box>
             </Tabs.Tab>
