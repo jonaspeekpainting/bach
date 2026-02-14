@@ -43,6 +43,12 @@ body {
     margin-bottom: 0 !important;
     /* Ensure footer has dark background */
     background-color: #0a0a0a !important;
+    /* Smooth transitions for position changes */
+    transition: transform 0.2s ease-out;
+    /* Optimize for smooth rendering */
+    will-change: transform;
+    /* Use transform for smoother positioning */
+    transform: translateZ(0);
   }
   
   /* Add consistent padding to main content to account for fixed footer */
@@ -55,6 +61,8 @@ body {
     margin-bottom: 0 !important;
     /* Ensure main has dark background */
     background-color: #0a0a0a !important;
+    /* Smooth transitions for padding changes */
+    transition: padding-bottom 0.2s ease-out;
   }
   
   /* Ensure containers inside main also respect the footer space */
