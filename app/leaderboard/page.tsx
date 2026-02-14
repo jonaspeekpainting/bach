@@ -2,7 +2,7 @@
 
 import { AppShell, Tabs, Box } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Navigation, MobileHeader } from "@/components/Navigation";
+import { Navigation } from "@/components/Navigation";
 import { LeaderboardDisplay } from "./LeaderboardDisplay";
 import { PointsForm } from "./PointsForm";
 import { TeamNamesForm } from "./TeamNamesForm";
@@ -14,10 +14,8 @@ export default function LeaderboardPage() {
   return (
     <AppShell
       navbar={{ width: 200, breakpoint: "sm" }}
-      header={{ height: 60 }}
       footer={{ height: 60 }}
     >
-      <MobileHeader />
       <AppShell.Main>
         <Tabs defaultValue="leaderboard" mt="md">
           <Tabs.List justify="center" grow style={{ overflowX: "auto" }}>

@@ -2,7 +2,7 @@
 
 import { AppShell, Title, Container, Paper, Text, Stack, Table, Divider, Badge, Box, Group, ThemeIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Navigation, MobileHeader } from "@/components/Navigation";
+import { Navigation } from "@/components/Navigation";
 import {
   IconGolf,
   IconBeer,
@@ -124,10 +124,8 @@ export default function GamesPage() {
   return (
     <AppShell
       navbar={{ width: 200, breakpoint: "sm" }}
-      header={{ height: 60 }}
       footer={{ height: 60 }}
     >
-      <MobileHeader />
       <AppShell.Main>
         <Container pt={{ base: "md", sm: "xl" }} pb={{ base: "md", sm: "xl" }} px={{ base: "xs", sm: "md" }} size="lg">
           <Title order={1} mb={{ base: "md", sm: "xl" }}>

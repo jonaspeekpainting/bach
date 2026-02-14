@@ -2,7 +2,7 @@
 
 import { AppShell, Title, Container, Paper, Text, Stack, Divider, Group, ThemeIcon, Box, List, Badge } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Navigation, MobileHeader } from "@/components/Navigation";
+import { Navigation } from "@/components/Navigation";
 import {
   IconCalendar,
   IconMapPin,
@@ -273,10 +273,8 @@ export default function SchedulePage() {
   return (
     <AppShell
       navbar={{ width: 200, breakpoint: "sm" }}
-      header={{ height: 60 }}
       footer={{ height: 60 }}
     >
-      <MobileHeader />
       <AppShell.Main>
         <Container pt={{ base: "md", sm: "xl" }} pb={{ base: "md", sm: "xl" }} px={{ base: "xs", sm: "md" }} size="lg">
           <Title order={1} mb={{ base: "md", sm: "xl" }}>

@@ -71,6 +71,8 @@ function SortableItem({ id, attendee, rank }: SortableItemProps) {
   return (
     <Box
       ref={setNodeRef}
+      {...attributes}
+      {...listeners}
       style={{
         ...style,
         padding: "var(--mantine-spacing-sm)",
@@ -80,6 +82,8 @@ function SortableItem({ id, attendee, rank }: SortableItemProps) {
         borderRadius: "var(--mantine-radius-sm)",
         cursor: "grab",
         touchAction: "none",
+        // Larger touch target on mobile
+        minHeight: "48px",
       }}
       onMouseDown={(e) => {
         if (e.currentTarget.style.cursor === "grab") {
@@ -92,14 +96,18 @@ function SortableItem({ id, attendee, rank }: SortableItemProps) {
     >
       <Group gap="sm" wrap="nowrap">
         <Box
-          {...attributes}
-          {...listeners}
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             color: "var(--mantine-color-gray-6)",
             cursor: "grab",
+            // Larger drag handle area on mobile
+            minWidth: "48px",
+            minHeight: "48px",
+            padding: "var(--mantine-spacing-xs)",
+            marginLeft: "-4px",
+            marginRight: "4px",
           }}
         >
           <IconGripVertical size={20} stroke={1.5} />

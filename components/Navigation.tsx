@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   IconCalendar,
   IconTrophy,
-  IconBook,
   IconDice,
   IconChartBar,
 } from "@tabler/icons-react";
@@ -75,7 +74,17 @@ export function Navigation({ opened, toggle }: NavigationProps) {
           })}
         </Stack>
       </AppShell.Navbar>
-      <AppShell.Footer hiddenFrom="sm" p="xs">
+      <AppShell.Footer 
+        hiddenFrom="sm" 
+        p="xs"
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+        }}
+      >
         <Group justify="space-around" gap={0} wrap="nowrap">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -131,18 +140,3 @@ export function Navigation({ opened, toggle }: NavigationProps) {
   );
 }
 
-export function MobileHeader() {
-  const pathname = usePathname();
-  const title = pathname === "/schedule" ? "Schedule" : 
-                pathname === "/rankings" ? "Rankings" : 
-                pathname === "/leaderboard" ? "Leaderboard" :
-                pathname === "/games" ? "Games" : "App";
-
-  return (
-    <AppShell.Header hiddenFrom="sm" p="md">
-      <Group>
-        <span style={{ fontWeight: 600, color: "var(--mantine-color-dark-9)" }}>{title}</span>
-      </Group>
-    </AppShell.Header>
-  );
-}

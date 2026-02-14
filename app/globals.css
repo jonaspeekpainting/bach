@@ -22,3 +22,22 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
+
+/* Fix footer to bottom on mobile devices */
+@media (max-width: 47.99em) {
+  /* Ensure footer stays fixed at bottom on iOS */
+  [data-mantine-component="AppShell.Footer"] {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    /* Support iOS safe area insets */
+    padding-bottom: env(safe-area-inset-bottom) !important;
+  }
+  
+  /* Add padding to main content to account for fixed footer */
+  [data-mantine-component="AppShell.Main"] {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom)) !important;
+  }
+}
