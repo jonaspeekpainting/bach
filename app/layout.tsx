@@ -4,6 +4,7 @@ import { MantineProvider, createTheme } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "./globals.css";
 import { ViewportHeightHandler } from "@/components/ViewportHeightHandler";
+import { getSiteUrl } from "@/lib/site-url";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,6 +22,7 @@ const theme = createTheme({
 });
 
 export const metadata: Metadata = {
+  metadataBase: getSiteUrl(),
   title: "Jonas' Bachelor Website",
   description: "Jonas' Bachelor Website",
 };
