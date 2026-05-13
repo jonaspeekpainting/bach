@@ -16,10 +16,7 @@ export default function RankingsPage() {
   console.log("RankingsPage - hasSubmitted:", hasSubmitted);
 
   return (
-    <AppShell
-      navbar={{ width: 200, breakpoint: "sm" }}
-      footer={{ height: 60 }}
-    >
+    <AppShell footer={{ height: 60 }}>
       <AppShell.Main>
         {hasSubmitted ? <RankingsDisplay /> : <RankingForm />}
       </AppShell.Main>

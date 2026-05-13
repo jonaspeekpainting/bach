@@ -3,11 +3,16 @@
 import { AppShell, NavLink, Stack, Group, Box } from "@mantine/core";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  IconCalendar,
   IconTrophy,
   IconDice,
   IconChartBar,
+  IconTournament,
+  IconClipboardList,
 } from "@tabler/icons-react";
+
+/** Flip to true when bringing back the left sidebar (desktop + small-screen drawer).
+ *  Also add `navbar={{ width: 200, breakpoint: "sm" }}` back on each page's `<AppShell>`. */
+export const SHOW_SIDE_NAV = false;
 
 interface NavigationProps {
   opened?: boolean;
@@ -19,61 +24,66 @@ export function Navigation({ opened, toggle }: NavigationProps) {
   const router = useRouter();
 
   const navItems = [
-    { label: "Schedule", href: "/schedule", icon: IconCalendar },
+    { label: "Itinerary", href: "/itinerary", icon: IconClipboardList },
     { label: "Rankings", href: "/rankings", icon: IconTrophy },
     { label: "Leaderboard", href: "/leaderboard", icon: IconChartBar },
     { label: "Games", href: "/games", icon: IconDice },
+    { label: "Tournaments", href: "/tournaments", icon: IconTournament },
   ];
 
   return (
     <>
-      <AppShell.Navbar p="md" visibleFrom="sm">
-        <Stack gap="xs">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.href}
-                href={item.href}
-                label={item.label}
-                leftSection={<Icon size="1.2rem" stroke={1.5} />}
-                active={pathname === item.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push(item.href);
-                }}
-                styles={{
-                  label: { color: "var(--mantine-color-dark-9)" },
-                }}
-              />
-            );
-          })}
-        </Stack>
-      </AppShell.Navbar>
-      <AppShell.Navbar p="md" hiddenFrom="sm" hidden={!opened}>
-        <Stack gap="xs">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.href}
-                href={item.href}
-                label={item.label}
-                leftSection={<Icon size="1.2rem" stroke={1.5} />}
-                active={pathname === item.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push(item.href);
-                  toggle?.();
-                }}
-                styles={{
-                  label: { color: "var(--mantine-color-dark-9)" },
-                }}
-              />
-            );
-          })}
-        </Stack>
-      </AppShell.Navbar>
+      {SHOW_SIDE_NAV && (
+        <>
+          <AppShell.Navbar p="md" visibleFrom="sm">
+            <Stack gap="xs">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.href}
+                    href={item.href}
+                    label={item.label}
+                    leftSection={<Icon size="1.2rem" stroke={1.5} />}
+                    active={pathname === item.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push(item.href);
+                    }}
+                    styles={{
+                      label: { color: "var(--mantine-color-dark-9)" },
+                    }}
+                  />
+                );
+              })}
+            </Stack>
+          </AppShell.Navbar>
+          <AppShell.Navbar p="md" hiddenFrom="sm" hidden={!opened}>
+            <Stack gap="xs">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.href}
+                    href={item.href}
+                    label={item.label}
+                    leftSection={<Icon size="1.2rem" stroke={1.5} />}
+                    active={pathname === item.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push(item.href);
+                      toggle?.();
+                    }}
+                    styles={{
+                      label: { color: "var(--mantine-color-dark-9)" },
+                    }}
+                  />
+                );
+              })}
+            </Stack>
+          </AppShell.Navbar>
+        </>
+      )}
       <AppShell.Footer 
         hiddenFrom="sm" 
         p="xs"

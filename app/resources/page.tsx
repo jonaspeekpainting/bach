@@ -8,10 +8,7 @@ export default function ResourcesPage() {
   const [opened, { toggle }] = useDisclosure();
 
   return (
-    <AppShell
-      navbar={{ width: 200, breakpoint: "sm" }}
-      footer={{ height: 60 }}
-    >
+    <AppShell footer={{ height: 60 }}>
       <AppShell.Main>
         <Container pt="xl" pb={0}>
           <Title order={1} mb="md">

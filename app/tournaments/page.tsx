@@ -3,22 +3,19 @@
 import { AppShell, Tabs, Box } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Navigation } from "@/components/Navigation";
-import { LeaderboardDisplay } from "./LeaderboardDisplay";
-import { PointsForm } from "./PointsForm";
-import { TeamNamesForm } from "./TeamNamesForm";
-import { IconTrophy, IconEdit, IconUsers } from "@tabler/icons-react";
+import { TournamentsDisplay } from "./TournamentsDisplay";
+import { TournamentAdmin } from "./TournamentAdmin";
 
-export default function LeaderboardPage() {
+export default function TournamentsPage() {
   const [opened, { toggle }] = useDisclosure();
 
   return (
     <AppShell footer={{ height: 60 }}>
       <AppShell.Main>
-        <Tabs defaultValue="leaderboard" mt="md">
+        <Tabs defaultValue="brackets" mt="md">
           <Tabs.List justify="center" grow style={{ overflowX: "auto" }}>
             <Tabs.Tab
-              value="leaderboard"
-              leftSection={<IconTrophy size={20} />}
+              value="brackets"
             >
               <Box 
                 component="span" 
@@ -28,7 +25,7 @@ export default function LeaderboardPage() {
                   whiteSpace: "nowrap",
                 }}
               >
-                Board
+                Brackets
               </Box>
               <Box 
                 component="span" 
@@ -38,12 +35,11 @@ export default function LeaderboardPage() {
                   whiteSpace: "nowrap",
                 }}
               >
-                Leaderboard
+                Brackets
               </Box>
             </Tabs.Tab>
             <Tabs.Tab 
-              value="enter" 
-              leftSection={<IconEdit size={20} />}
+              value="admin"
             >
               <Box 
                 component="span" 
@@ -53,7 +49,7 @@ export default function LeaderboardPage() {
                   whiteSpace: "nowrap",
                 }}
               >
-                Enter
+                Admin
               </Box>
               <Box 
                 component="span" 
@@ -63,46 +59,17 @@ export default function LeaderboardPage() {
                   whiteSpace: "nowrap",
                 }}
               >
-                Enter Points
-              </Box>
-            </Tabs.Tab>
-            <Tabs.Tab 
-              value="teams" 
-              leftSection={<IconUsers size={20} />}
-            >
-              <Box 
-                component="span" 
-                hiddenFrom="sm"
-                style={{
-                  fontSize: "var(--mantine-font-size-xs)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Teams
-              </Box>
-              <Box 
-                component="span" 
-                visibleFrom="sm"
-                style={{
-                  fontSize: "var(--mantine-font-size-sm)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Team Names
+                Admin
               </Box>
             </Tabs.Tab>
           </Tabs.List>
 
-          <Tabs.Panel value="leaderboard" pt="xl">
-            <LeaderboardDisplay />
+          <Tabs.Panel value="brackets" pt="xl">
+            <TournamentsDisplay />
           </Tabs.Panel>
 
-          <Tabs.Panel value="enter" pt="xl">
-            <PointsForm />
-          </Tabs.Panel>
-
-          <Tabs.Panel value="teams" pt="xl">
-            <TeamNamesForm />
+          <Tabs.Panel value="admin" pt="xl">
+            <TournamentAdmin />
           </Tabs.Panel>
         </Tabs>
       </AppShell.Main>
