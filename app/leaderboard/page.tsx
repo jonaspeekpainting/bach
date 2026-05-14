@@ -1,18 +1,15 @@
 "use client";
 
 import { AppShell, Tabs, Box } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { Navigation } from "@/components/Navigation";
+import { Navigation, SHOW_NAV } from "@/components/Navigation";
 import { LeaderboardDisplay } from "./LeaderboardDisplay";
 import { PointsForm } from "./PointsForm";
 import { TeamNamesForm } from "./TeamNamesForm";
 import { IconTrophy, IconEdit, IconUsers } from "@tabler/icons-react";
 
 export default function LeaderboardPage() {
-  const [opened, { toggle }] = useDisclosure();
-
   return (
-    <AppShell footer={{ height: 60 }}>
+    <AppShell footer={SHOW_NAV ? { height: 60 } : undefined}>
       <AppShell.Main>
         <Tabs defaultValue="leaderboard" mt="md">
           <Tabs.List justify="center" grow style={{ overflowX: "auto" }}>
@@ -106,7 +103,7 @@ export default function LeaderboardPage() {
           </Tabs.Panel>
         </Tabs>
       </AppShell.Main>
-      <Navigation opened={opened} toggle={toggle} />
+      <Navigation />
     </AppShell>
   );
 }

@@ -10,7 +10,10 @@ import {
   IconClipboardList,
 } from "@tabler/icons-react";
 
-/** Flip to true when bringing back the left sidebar (desktop + small-screen drawer).
+/** Flip to true when bringing back any nav (footer tabs + optional sidebar). */
+export const SHOW_NAV = false;
+
+/** When `SHOW_NAV` is true: flip to true for desktop sidebar + mobile drawer.
  *  Also add `navbar={{ width: 200, breakpoint: "sm" }}` back on each page's `<AppShell>`. */
 export const SHOW_SIDE_NAV = false;
 
@@ -22,6 +25,8 @@ interface NavigationProps {
 export function Navigation({ opened, toggle }: NavigationProps) {
   const pathname = usePathname();
   const router = useRouter();
+
+  if (!SHOW_NAV) return null;
 
   const navItems = [
     { label: "Itinerary", href: "/itinerary", icon: IconClipboardList },

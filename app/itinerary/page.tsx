@@ -1,9 +1,8 @@
 "use client";
 
 import { AppShell } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { Bebas_Neue, Playfair_Display, Inter } from "next/font/google";
-import { Navigation } from "@/components/Navigation";
+import { Navigation, SHOW_NAV } from "@/components/Navigation";
 import styles from "./itinerary.module.css";
 
 const bebas = Bebas_Neue({
@@ -25,11 +24,10 @@ const inter = Inter({
 });
 
 export default function ItineraryPage() {
-  const [opened, { toggle }] = useDisclosure();
   const fontClass = `${bebas.variable} ${playfair.variable} ${inter.variable}`;
 
   return (
-    <AppShell footer={{ height: 60 }}>
+    <AppShell footer={SHOW_NAV ? { height: 60 } : undefined}>
       <AppShell.Main p={0}>
         <div className={`${styles.itineraryRoot} ${fontClass}`}>
           <div className={styles.container}>
@@ -230,7 +228,7 @@ export default function ItineraryPage() {
           </div>
         </div>
       </AppShell.Main>
-      <Navigation opened={opened} toggle={toggle} />
+      <Navigation />
     </AppShell>
   );
 }

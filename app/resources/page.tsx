@@ -1,14 +1,11 @@
 "use client";
 
 import { AppShell, Title, Text, Container } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { Navigation } from "@/components/Navigation";
+import { Navigation, SHOW_NAV } from "@/components/Navigation";
 
 export default function ResourcesPage() {
-  const [opened, { toggle }] = useDisclosure();
-
   return (
-    <AppShell footer={{ height: 60 }}>
+    <AppShell footer={SHOW_NAV ? { height: 60 } : undefined}>
       <AppShell.Main>
         <Container pt="xl" pb={0}>
           <Title order={1} mb="md">
@@ -17,7 +14,7 @@ export default function ResourcesPage() {
           <Text c="gray.7">Resources and helpful information will be added here.</Text>
         </Container>
       </AppShell.Main>
-      <Navigation opened={opened} toggle={toggle} />
+      <Navigation />
     </AppShell>
   );
 }

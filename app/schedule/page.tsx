@@ -1,8 +1,7 @@
 "use client";
 
 import { AppShell, Title, Container, Paper, Text, Stack, Divider, Group, ThemeIcon, Box, List, Badge } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { Navigation } from "@/components/Navigation";
+import { Navigation, SHOW_NAV } from "@/components/Navigation";
 import {
   IconCalendar,
   IconMapPin,
@@ -268,10 +267,8 @@ const meals = {
 };
 
 export default function SchedulePage() {
-  const [opened, { toggle }] = useDisclosure();
-
   return (
-    <AppShell footer={{ height: 60 }}>
+    <AppShell footer={SHOW_NAV ? { height: 60 } : undefined}>
       <AppShell.Main>
         <Container pt={{ base: "md", sm: "xl" }} pb={{ base: "md", sm: "xl" }} px={{ base: "xs", sm: "md" }} size="lg">
           <Title order={1} mb={{ base: "md", sm: "xl" }}>
@@ -430,7 +427,7 @@ export default function SchedulePage() {
           </Stack>
         </Container>
       </AppShell.Main>
-      <Navigation opened={opened} toggle={toggle} />
+      <Navigation />
     </AppShell>
   );
 }

@@ -1,16 +1,13 @@
 "use client";
 
 import { AppShell, Tabs, Box } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { Navigation } from "@/components/Navigation";
+import { Navigation, SHOW_NAV } from "@/components/Navigation";
 import { TournamentsDisplay } from "./TournamentsDisplay";
 import { TournamentAdmin } from "./TournamentAdmin";
 
 export default function TournamentsPage() {
-  const [opened, { toggle }] = useDisclosure();
-
   return (
-    <AppShell footer={{ height: 60 }}>
+    <AppShell footer={SHOW_NAV ? { height: 60 } : undefined}>
       <AppShell.Main>
         <Tabs defaultValue="brackets" mt="md">
           <Tabs.List justify="center" grow style={{ overflowX: "auto" }}>
@@ -73,7 +70,7 @@ export default function TournamentsPage() {
           </Tabs.Panel>
         </Tabs>
       </AppShell.Main>
-      <Navigation opened={opened} toggle={toggle} />
+      <Navigation />
     </AppShell>
   );
 }
