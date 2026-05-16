@@ -85,6 +85,7 @@ export default function ItineraryPage() {
           <div className={styles.dayText}>
             <div className={styles.dayName}>Friday</div>
             <div className={styles.dayLocation}>Hurricane</div>
+            <div className={styles.dayLocation}>Yard Games · Sports</div>
           </div>
         </div>
         <div className={styles.dayRight}>
@@ -100,7 +101,7 @@ export default function ItineraryPage() {
               </li>
               <li className={styles.scheduleItem}>
                 <span className={styles.time}>EVE</span>
-                <span className={styles.itemTitle}>Hibachi + Sake Bombs</span>
+                <span className={styles.itemTitle}>Hibachi · Sake Bombs</span>
               </li>
             </ul>
           </div>
@@ -114,6 +115,7 @@ export default function ItineraryPage() {
           <div className={styles.dayText}>
             <div className={styles.dayName}>Saturday</div>
             <div className={styles.dayLocation}>Hurricane</div>
+            <div className={styles.dayLocation}>Golf · Drinking Day</div>
           </div>
         </div>
         <div className={styles.dayRight}>
@@ -147,6 +149,7 @@ export default function ItineraryPage() {
           <div className={styles.dayText}>
             <div className={styles.dayName}>Sunday</div>
             <div className={styles.dayLocation}>Hurricane</div>
+            <div className={styles.dayLocation}>Drug Day · Chill · Finale</div>
           </div>
         </div>
         <div className={styles.dayRight}>
