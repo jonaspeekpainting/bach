@@ -17,8 +17,25 @@ const geistMono = Geist_Mono({
 });
 
 const theme = createTheme({
-  primaryColor: "blue",
-  defaultRadius: "md",
+  primaryColor: "orange",
+  defaultRadius: "sm",
+  colors: {
+    dark: [
+      "#faf3e7",
+      "#f5e6d3",
+      "#e8c9a0",
+      "#d4a574",
+      "#8b5e3c",
+      "#6b4423",
+      "#4a2f18",
+      "#3d1f0f",
+      "#2c1810",
+      "#1a0e08",
+    ],
+  },
+  other: {
+    bodyBg: "#f5e6d3",
+  },
 });
 
 export const metadata: Metadata = {
@@ -33,10 +50,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" style={{ background: "#0a0a0a" }}>
+    <html lang="en" style={{ background: "#f5e6d3" }}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{ background: "#0a0a0a", minHeight: "100vh" }}
+        style={{ background: "#f5e6d3", minHeight: "100vh", color: "#2c1810" }}
       >
         <ViewportHeightHandler />
         <MantineProvider theme={theme}>

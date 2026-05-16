@@ -83,9 +83,9 @@ export function TeamNamesForm() {
 
   if (!isAdmin) {
     return (
-      <Container size="sm" pt="xl" pb={0}>
-        <Alert color="blue" title="Admin Access Required">
-          <Text size="sm" c="dimmed">
+      <Container size="sm" p={0}>
+        <Alert color="orange" title="Admin Access Required">
+          <Text size="sm" c="#6b4423">
             Fuck off.
           </Text>
         </Alert>
@@ -94,10 +94,10 @@ export function TeamNamesForm() {
   }
 
   return (
-    <Container size="md" pt="xl" pb={0}>
+    <Container size="md" p={0}>
       <Stack gap="lg">
-        <Title order={2} c="dimmed">Set Team Names</Title>
-        <Text size="sm" c="dimmed">
+        <Title order={2} c="#2c1810">Set Team Names</Title>
+        <Text size="sm" c="#3d1f0f">
           Enter custom names for each team after the draft is complete.
         </Text>
 
@@ -128,12 +128,9 @@ export function TeamNamesForm() {
                   value={team.name}
                   onChange={(e) => handleTeamNameChange(team.id, e.target.value)}
                   placeholder={`Enter name for ${team.id}`}
-                  labelProps={{
-                    c: "white",
-                  }}
                   styles={{
                     input: {
-                      color: "var(--mantine-color-dark-9)",
+                      color: "#2c1810",
                     },
                   }}
                 />

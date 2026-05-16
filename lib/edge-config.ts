@@ -5,10 +5,8 @@ export interface RankingSubmission {
   timestamp: string;
   rankings: {
     golf: Record<string, number>;
-    americanChallenge: Record<string, number>;
-    athleticism: Record<string, number>;
-    drinkingGame: Record<string, number>;
-    drugHandling: Record<string, number>;
+    drinking: Record<string, number>;
+    athletics: Record<string, number>;
   };
 }
 

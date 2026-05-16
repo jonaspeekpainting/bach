@@ -32,18 +32,13 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconGripVertical } from "@tabler/icons-react";
-import { ATTENDEES, CATEGORIES } from "@/lib/constants";
+import { ATTENDEES, CATEGORIES, type CategoryKey } from "@/lib/constants";
 import type { RankingSubmission } from "@/lib/edge-config";
 
-interface RankingFormData {
-  submittedBy: string;
-  rankings: {
-    golf: Record<string, number>;
-    americanChallenge: Record<string, number>;
-    athleticism: Record<string, number>;
-    drinkingGame: Record<string, number>;
-    drugHandling: Record<string, number>;
-  };
+function initialCategoryOrders(): Record<CategoryKey, string[]> {
+  return Object.fromEntries(
+    CATEGORIES.map((category) => [category.key, [...ATTENDEES]])
+  ) as Record<CategoryKey, string[]>;
 }
 
 interface SortableItemProps {
@@ -77,8 +72,8 @@ function SortableItem({ id, attendee, rank }: SortableItemProps) {
         ...style,
         padding: "var(--mantine-spacing-sm)",
         marginBottom: "var(--mantine-spacing-xs)",
-        backgroundColor: "var(--mantine-color-gray-0)",
-        border: "1px solid var(--mantine-color-gray-3)",
+        backgroundColor: "#fffef9",
+        border: "1px solid #e0ceb0",
         borderRadius: "var(--mantine-radius-sm)",
         cursor: "grab",
         touchAction: "none",
@@ -122,7 +117,7 @@ function SortableItem({ id, attendee, rank }: SortableItemProps) {
             minWidth: 40,
             textAlign: "center",
             fontWeight: 600,
-            color: "var(--mantine-color-blue-6)",
+            color: "#c1440e",
           }}
         >
           #{rank}
@@ -136,15 +131,8 @@ export function RankingForm() {
   console.log("RankingForm component rendered");
   
   const [submittedBy, setSubmittedBy] = useState<string | null>(null);
-  const [categoryOrders, setCategoryOrders] = useState<
-    Record<string, string[]>
-  >({
-    golf: [...ATTENDEES],
-    americanChallenge: [...ATTENDEES],
-    athleticism: [...ATTENDEES],
-    drinkingGame: [...ATTENDEES],
-    drugHandling: [...ATTENDEES],
-  });
+  const [categoryOrders, setCategoryOrders] =
+    useState<Record<CategoryKey, string[]>>(initialCategoryOrders);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [, setHasSubmitted] = useLocalStorage<boolean>({
@@ -163,7 +151,7 @@ export function RankingForm() {
     })
   );
 
-  const handleDragEnd = (event: DragEndEvent, categoryKey: string) => {
+  const handleDragEnd = (event: DragEndEvent, categoryKey: CategoryKey) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
@@ -179,20 +167,15 @@ export function RankingForm() {
     }
   };
 
-  const convertOrdersToRankings = (): RankingFormData["rankings"] => {
-    const rankings: RankingFormData["rankings"] = {
-      golf: {},
-      americanChallenge: {},
-      athleticism: {},
-      drinkingGame: {},
-      drugHandling: {},
-    };
+  const convertOrdersToRankings = (): RankingSubmission["rankings"] => {
+    const rankings = Object.fromEntries(
+      CATEGORIES.map((category) => [category.key, {}])
+    ) as RankingSubmission["rankings"];
 
     CATEGORIES.forEach((category) => {
       const order = categoryOrders[category.key];
       order.forEach((attendee, index) => {
-        rankings[category.key as keyof RankingFormData["rankings"]][attendee] =
-          index + 1;
+        rankings[category.key][attendee] = index + 1;
       });
     });
 
@@ -307,10 +290,10 @@ export function RankingForm() {
   };
 
   return (
-    <Container size="sm" pt="xl" pb={0} px="xs">
+    <Container size="sm" p={0}>
       <Stack gap="lg">
-        <Title order={2}>Submit Your Rankings</Title>
-        <Text size="sm">
+        <Title order={2} c="#2c1810">Submit Your Rankings</Title>
+        <Text size="sm" c="#3d1f0f">
           Drag and drop to order attendees in each category from best (top) to worst (bottom).
         </Text>
 
@@ -327,9 +310,6 @@ export function RankingForm() {
           value={submittedBy}
           onChange={(value) => setSubmittedBy(value)}
           required
-          labelProps={{
-            c: "white",
-          }}
           styles={{
             option: { color: "var(--mantine-color-dark-9)" },
             dropdown: { color: "var(--mantine-color-dark-9)" },

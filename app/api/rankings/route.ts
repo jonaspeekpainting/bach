@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { get } from "@vercel/edge-config";
 import type { RankingSubmission } from "@/lib/edge-config";
+import { CATEGORIES } from "@/lib/constants";
 import { calculateCategoryRankings, calculateOverallRankings } from "@/lib/ranking-calculator";
+import type { CategoryKey } from "@/lib/constants";
+import type { CategoryRanking } from "@/lib/ranking-calculator";
 
 export async function GET() {
   try {
@@ -16,14 +19,12 @@ export async function GET() {
       console.log("No submissions found in Edge Config");
     }
 
-    // Calculate category and overall rankings
-    const categoryRankings = {
-      golf: calculateCategoryRankings(submissions, "golf"),
-      americanChallenge: calculateCategoryRankings(submissions, "americanChallenge"),
-      athleticism: calculateCategoryRankings(submissions, "athleticism"),
-      drinkingGame: calculateCategoryRankings(submissions, "drinkingGame"),
-      drugHandling: calculateCategoryRankings(submissions, "drugHandling"),
-    };
+    const categoryRankings = Object.fromEntries(
+      CATEGORIES.map((category) => [
+        category.key,
+        calculateCategoryRankings(submissions, category.key),
+      ])
+    ) as Record<CategoryKey, CategoryRanking[]>;
 
     const overallRankings = calculateOverallRankings(submissions);
 
@@ -200,13 +201,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate and return updated rankings
-    const categoryRankings = {
-      golf: calculateCategoryRankings(updated, "golf"),
-      americanChallenge: calculateCategoryRankings(updated, "americanChallenge"),
-      athleticism: calculateCategoryRankings(updated, "athleticism"),
-      drinkingGame: calculateCategoryRankings(updated, "drinkingGame"),
-      drugHandling: calculateCategoryRankings(updated, "drugHandling"),
-    };
+    const categoryRankings = Object.fromEntries(
+      CATEGORIES.map((category) => [
+        category.key,
+        calculateCategoryRankings(updated, category.key),
+      ])
+    ) as Record<CategoryKey, CategoryRanking[]>;
 
     const overallRankings = calculateOverallRankings(updated);
 

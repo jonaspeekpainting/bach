@@ -1,7 +1,7 @@
 "use client";
 
-import { AppShell, Title, Container, Paper, Text, Stack, Divider, Group, ThemeIcon, Box, List, Badge } from "@mantine/core";
-import { Navigation, SHOW_NAV } from "@/components/Navigation";
+import { Title, Paper, Text, Stack, Divider, Group, ThemeIcon, Box, List, Badge } from "@mantine/core";
+import { PageShell } from "@/components/PageShell";
 import {
   IconCalendar,
   IconMapPin,
@@ -268,13 +268,11 @@ const meals = {
 
 export default function SchedulePage() {
   return (
-    <AppShell footer={SHOW_NAV ? { height: 60 } : undefined}>
-      <AppShell.Main>
-        <Container pt={{ base: "md", sm: "xl" }} pb={{ base: "md", sm: "xl" }} px={{ base: "xs", sm: "md" }} size="lg">
-          <Title order={1} mb={{ base: "md", sm: "xl" }}>
-            Schedule
-          </Title>
-
+    <PageShell
+      eyebrow="The Week Ahead"
+      title="Schedule"
+      accent="CALENDAR · MEALS · ACTIVITIES"
+    >
           <Stack gap="md">
             {/* Calendar Section */}
             <Paper p={{ base: "sm", sm: "md" }} withBorder style={{ borderLeft: "4px solid var(--mantine-color-blue-6)" }}>
@@ -425,9 +423,6 @@ export default function SchedulePage() {
               </Stack>
             </Paper>
           </Stack>
-        </Container>
-      </AppShell.Main>
-      <Navigation />
-    </AppShell>
+    </PageShell>
   );
 }

@@ -1,96 +1,78 @@
 "use client";
 
 import { AppShell, NavLink, Stack, Group, Box } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { usePathname, useRouter } from "next/navigation";
 import {
   IconTrophy,
   IconDice,
   IconChartBar,
-  IconTournament,
   IconClipboardList,
 } from "@tabler/icons-react";
 
-/** Flip to true when bringing back any nav (footer tabs + optional sidebar). */
+/** Force nav on for everyone (e.g. launch). Otherwise nav shows when admin is true. */
 export const SHOW_NAV = false;
 
-/** When `SHOW_NAV` is true: flip to true for desktop sidebar + mobile drawer.
- *  Also add `navbar={{ width: 200, breakpoint: "sm" }}` back on each page's `<AppShell>`. */
-export const SHOW_SIDE_NAV = false;
+export const NAVBAR_WIDTH = 200;
 
-interface NavigationProps {
-  opened?: boolean;
-  toggle?: () => void;
+export function useShowNav() {
+  const [isAdmin] = useLocalStorage<boolean>({
+    key: "admin",
+    defaultValue: false,
+  });
+  return SHOW_NAV || isAdmin;
 }
 
-export function Navigation({ opened, toggle }: NavigationProps) {
+const navItems = [
+  { label: "Itinerary", href: "/itinerary", icon: IconClipboardList },
+  { label: "Rankings", href: "/rankings", icon: IconTrophy },
+  { label: "Leaderboard", href: "/leaderboard", icon: IconChartBar },
+  { label: "Games", href: "/games", icon: IconDice },
+];
+
+export function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
+  const showNav = useShowNav();
 
-  if (!SHOW_NAV) return null;
-
-  const navItems = [
-    { label: "Itinerary", href: "/itinerary", icon: IconClipboardList },
-    { label: "Rankings", href: "/rankings", icon: IconTrophy },
-    { label: "Leaderboard", href: "/leaderboard", icon: IconChartBar },
-    { label: "Games", href: "/games", icon: IconDice },
-    { label: "Tournaments", href: "/tournaments", icon: IconTournament },
-  ];
+  if (!showNav) return null;
 
   return (
     <>
-      {SHOW_SIDE_NAV && (
-        <>
-          <AppShell.Navbar p="md" visibleFrom="sm">
-            <Stack gap="xs">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.href}
-                    href={item.href}
-                    label={item.label}
-                    leftSection={<Icon size="1.2rem" stroke={1.5} />}
-                    active={pathname === item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push(item.href);
-                    }}
-                    styles={{
-                      label: { color: "var(--mantine-color-dark-9)" },
-                    }}
-                  />
-                );
-              })}
-            </Stack>
-          </AppShell.Navbar>
-          <AppShell.Navbar p="md" hiddenFrom="sm" hidden={!opened}>
-            <Stack gap="xs">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.href}
-                    href={item.href}
-                    label={item.label}
-                    leftSection={<Icon size="1.2rem" stroke={1.5} />}
-                    active={pathname === item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push(item.href);
-                      toggle?.();
-                    }}
-                    styles={{
-                      label: { color: "var(--mantine-color-dark-9)" },
-                    }}
-                  />
-                );
-              })}
-            </Stack>
-          </AppShell.Navbar>
-        </>
-      )}
-      <AppShell.Footer 
-        hiddenFrom="sm" 
+      {/* Desktop: left sidebar */}
+      <AppShell.Navbar p="md" visibleFrom="sm" style={{ background: "#faf3e7", borderRight: "1px solid #e0ceb0" }}>
+        <Stack gap="xs">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.href}
+                href={item.href}
+                label={item.label}
+                leftSection={<Icon size="1.2rem" stroke={1.5} />}
+                active={pathname === item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(item.href);
+                }}
+                styles={{
+                  label: { color: "#2c1810" },
+                  root: {
+                    "&[data-active]": {
+                      backgroundColor: "rgba(193, 68, 14, 0.12)",
+                      color: "#c1440e",
+                    },
+                  },
+                }}
+              />
+            );
+          })}
+        </Stack>
+      </AppShell.Navbar>
+
+      {/* Mobile: bottom tab bar (not hamburger — 5 primary sections, one tap each) */}
+      <AppShell.Footer
+        hiddenFrom="sm"
         p="xs"
         style={{
           position: "fixed",
@@ -98,8 +80,9 @@ export function Navigation({ opened, toggle }: NavigationProps) {
           left: 0,
           right: 0,
           zIndex: 1000,
-          // Ensure it stays at the bottom of visual viewport
           willChange: "transform",
+          background: "#faf3e7",
+          borderTop: "1px solid #e0ceb0",
         }}
       >
         <Group justify="space-around" gap={0} wrap="nowrap">
@@ -123,21 +106,21 @@ export function Navigation({ opened, toggle }: NavigationProps) {
                   padding: "4px 2px",
                   cursor: "pointer",
                   borderRadius: "var(--mantine-radius-sm)",
-                  backgroundColor: isActive ? "var(--mantine-color-blue-0)" : "transparent",
+                  backgroundColor: isActive ? "rgba(193, 68, 14, 0.12)" : "transparent",
                   minWidth: 0,
                 }}
               >
-                <Icon 
-                  size="1.1rem" 
+                <Icon
+                  size="1.1rem"
                   stroke={1.5}
-                  color={isActive ? "var(--mantine-color-blue-6)" : "var(--mantine-color-gray-6)"}
+                  color={isActive ? "#c1440e" : "#8b5e3c"}
                 />
                 <Box
                   component="span"
                   style={{
                     fontSize: "0.6rem",
                     lineHeight: 1.2,
-                    color: isActive ? "var(--mantine-color-blue-6)" : "var(--mantine-color-gray-7)",
+                    color: isActive ? "#c1440e" : "#6b4423",
                     fontWeight: isActive ? 600 : 400,
                     textAlign: "center",
                     whiteSpace: "nowrap",
@@ -156,4 +139,3 @@ export function Navigation({ opened, toggle }: NavigationProps) {
     </>
   );
 }
-

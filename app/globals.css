@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #f5e6d3;
+  --foreground: #2c1810;
+  --bach-cream: #faf3e7;
+  --bach-brown: #8b4513;
+  --bach-accent: #c1440e;
+  --bach-gold: #e8a33d;
 }
 
 @theme inline {
@@ -13,80 +17,61 @@
 }
 
 html {
-  background: #0a0a0a !important;
+  background: #f5e6d3 !important;
 }
 
 body {
-  background: #0a0a0a !important;
+  background: #f5e6d3 !important;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, sans-serif;
   min-height: 100vh;
 }
 
-/* Ensure all Mantine components use dark background */
 [data-mantine-color-scheme] {
-  background-color: #0a0a0a !important;
+  background-color: #f5e6d3 !important;
 }
 
-/* Fix footer to bottom on mobile devices */
 @media (max-width: 47.99em) {
-  /* Ensure footer stays fixed at bottom of visual viewport */
   [data-mantine-component="AppShell.Footer"] {
     position: fixed !important;
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
     z-index: 1000 !important;
-    /* Support iOS safe area insets */
     padding-bottom: env(safe-area-inset-bottom) !important;
-    /* Ensure it stays at the bottom edge */
     margin-bottom: 0 !important;
-    /* Ensure footer has dark background */
-    background-color: #0a0a0a !important;
-    /* Smooth transitions for position changes */
+    background-color: #faf3e7 !important;
+    border-top: 1px solid #e0ceb0 !important;
     transition: transform 0.2s ease-out;
-    /* Optimize for smooth rendering */
     will-change: transform;
-    /* Use transform for smoother positioning */
     transform: translateZ(0);
   }
-  
-  /* Add consistent padding to main content to account for fixed footer */
-  /* This padding stays constant - 60px footer height + safe area + extra margin */
+
   [data-mantine-component="AppShell.Main"] {
     padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
-    /* Ensure content can scroll properly */
     min-height: 0 !important;
-    /* Prevent content from overlapping footer */
     margin-bottom: 0 !important;
-    /* Ensure main has dark background */
-    background-color: #0a0a0a !important;
-    /* Smooth transitions for padding changes */
+    background-color: transparent !important;
     transition: padding-bottom 0.2s ease-out;
   }
-  
-  /* Ensure containers inside main also respect the footer space */
+
   [data-mantine-component="AppShell.Main"] [data-mantine-component="Container"] {
     padding-bottom: 0 !important;
   }
-  
-  /* Ensure body uses dynamic viewport height for proper layout */
+
   body {
     min-height: calc(var(--vh, 1vh) * 100);
-    /* Prevent body from extending beyond viewport */
     overflow-x: hidden;
-    background: #0a0a0a !important;
+    background: #f5e6d3 !important;
   }
-  
-  /* Ensure html uses full height */
+
   html {
     height: 100%;
     overflow-x: hidden;
-    background: #0a0a0a !important;
+    background: #f5e6d3 !important;
   }
-  
-  /* Ensure AppShell uses dark background */
+
   [data-mantine-component="AppShell"] {
-    background-color: #0a0a0a !important;
+    background-color: transparent !important;
   }
 }

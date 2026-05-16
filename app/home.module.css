@@ -1,6 +1,6 @@
 .root {
-  font-family: var(--font-home-inter), system-ui, sans-serif;
-  background: #faf3e7;
+  font-family: var(--font-bach-inter), system-ui, sans-serif;
+  background: transparent;
   color: #2c1810;
   min-height: 100vh;
 }
@@ -72,7 +72,7 @@
 }
 
 .heroEyebrow {
-  font-family: var(--font-home-inter), sans-serif;
+  font-family: var(--font-bach-inter), sans-serif;
   font-size: 10px;
   letter-spacing: 6px;
   text-transform: uppercase;
@@ -82,7 +82,7 @@
 }
 
 .heroHeadline {
-  font-family: var(--font-home-bebas), sans-serif;
+  font-family: var(--font-bach-bebas), sans-serif;
   font-size: clamp(52px, 11vw, 100px);
   line-height: 0.9;
   color: #2c1810;
@@ -108,7 +108,7 @@
 }
 
 .heroPill {
-  font-family: var(--font-home-bebas), sans-serif;
+  font-family: var(--font-bach-bebas), sans-serif;
   font-size: 16px;
   letter-spacing: 2px;
   color: #e8a33d;
@@ -120,7 +120,7 @@
 
 .heroScroll {
   margin-top: 40px;
-  font-family: var(--font-home-inter), sans-serif;
+  font-family: var(--font-bach-inter), sans-serif;
   font-size: 11px;
   letter-spacing: 4px;
   text-transform: uppercase;
@@ -141,9 +141,11 @@
 /* ─── Sections shared ─────────────────────────────────────────── */
 
 .section {
+  width: 100%;
   max-width: 880px;
   margin: 0 auto;
   padding: 60px 24px;
+  box-sizing: border-box;
 }
 
 .sectionCard {
@@ -152,6 +154,24 @@
   box-shadow: 0 12px 40px rgba(80, 30, 0, 0.2);
   position: relative;
   overflow: hidden;
+}
+
+.sectionCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(
+    90deg,
+    #c1440e 0%,
+    #e8a33d 25%,
+    #d4a574 50%,
+    #6b8e4e 75%,
+    #2e5a7e 100%
+  );
+  z-index: 1;
 }
 
 .sectionInner {
@@ -178,7 +198,7 @@
 }
 
 .sectionTitle {
-  font-family: var(--font-home-bebas), sans-serif;
+  font-family: var(--font-bach-bebas), sans-serif;
   font-size: clamp(36px, 6vw, 56px);
   line-height: 1;
   color: #2c1810;
@@ -219,7 +239,7 @@
 .bioPhotoCaption {
   background: #2c1810;
   color: #e8a33d;
-  font-family: var(--font-home-bebas), sans-serif;
+  font-family: var(--font-bach-bebas), sans-serif;
   font-size: 13px;
   letter-spacing: 2px;
   text-align: center;
@@ -227,7 +247,7 @@
 }
 
 .bioBody p {
-  font-family: var(--font-home-inter), sans-serif;
+  font-family: var(--font-bach-inter), sans-serif;
   font-size: 15px;
   line-height: 1.7;
   color: #3d1f0f;
@@ -239,7 +259,7 @@
 }
 
 .bioHighlight {
-  font-family: var(--font-home-playfair), serif;
+  font-family: var(--font-bach-playfair), serif;
   font-style: italic;
   font-size: 18px;
   color: #c1440e;
@@ -258,7 +278,7 @@
 }
 
 .statBadge {
-  font-family: var(--font-home-bebas), sans-serif;
+  font-family: var(--font-bach-bebas), sans-serif;
   font-size: 14px;
   letter-spacing: 1px;
   padding: 5px 14px;
@@ -292,7 +312,7 @@
 }
 
 .statBigNumber {
-  font-family: var(--font-home-bebas), sans-serif;
+  font-family: var(--font-bach-bebas), sans-serif;
   font-size: clamp(140px, 28vw, 340px);
   color: #e8a33d;
   line-height: 0.85;
@@ -300,7 +320,7 @@
 }
 
 .statBigLabel {
-  font-family: var(--font-home-inter), sans-serif;
+  font-family: var(--font-bach-inter), sans-serif;
   font-size: clamp(14px, 2.4vw, 22px);
   letter-spacing: 8px;
   text-transform: uppercase;
@@ -329,7 +349,7 @@
 }
 
 .excitedHeadline {
-  font-family: var(--font-home-bebas), sans-serif;
+  font-family: var(--font-bach-bebas), sans-serif;
   font-size: clamp(72px, 16vw, 220px);
   color: #faf3e7;
   letter-spacing: 4px;
@@ -339,7 +359,7 @@
 
 .excitedButton {
   display: inline-block;
-  font-family: var(--font-home-bebas), sans-serif;
+  font-family: var(--font-bach-bebas), sans-serif;
   font-size: clamp(20px, 2.6vw, 28px);
   letter-spacing: 4px;
   color: #c1440e;
@@ -356,7 +376,7 @@
 }
 
 .excitedFooter {
-  font-family: var(--font-home-bebas), sans-serif;
+  font-family: var(--font-bach-bebas), sans-serif;
   font-size: 13px;
   letter-spacing: 4px;
   color: rgba(250, 243, 231, 0.55);

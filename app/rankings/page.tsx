@@ -1,8 +1,7 @@
 "use client";
 
-import { AppShell } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { Navigation, SHOW_NAV } from "@/components/Navigation";
+import { PageShell } from "@/components/PageShell";
 import { RankingForm } from "./RankingForm";
 import { RankingsDisplay } from "./RankingsDisplay";
 
@@ -11,14 +10,14 @@ export default function RankingsPage() {
     key: "ranking-submitted",
     defaultValue: false,
   });
-  console.log("RankingsPage - hasSubmitted:", hasSubmitted);
 
   return (
-    <AppShell footer={SHOW_NAV ? { height: 60 } : undefined}>
-      <AppShell.Main>
-        {hasSubmitted ? <RankingsDisplay /> : <RankingForm />}
-      </AppShell.Main>
-      <Navigation />
-    </AppShell>
+    <PageShell
+      eyebrow="Power Rankings"
+      title="Rank the Boys"
+      accent="GOLF · BEER · ATHLETICS"
+    >
+      {hasSubmitted ? <RankingsDisplay /> : <RankingForm />}
+    </PageShell>
   );
 }

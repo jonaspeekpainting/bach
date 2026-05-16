@@ -1,20 +1,18 @@
 "use client";
 
-import { AppShell, Title, Text, Container } from "@mantine/core";
-import { Navigation, SHOW_NAV } from "@/components/Navigation";
+import { Text } from "@mantine/core";
+import { PageShell } from "@/components/PageShell";
 
 export default function ResourcesPage() {
   return (
-    <AppShell footer={SHOW_NAV ? { height: 60 } : undefined}>
-      <AppShell.Main>
-        <Container pt="xl" pb={0}>
-          <Title order={1} mb="md">
-            Resources
-          </Title>
-          <Text c="gray.7">Resources and helpful information will be added here.</Text>
-        </Container>
-      </AppShell.Main>
-      <Navigation />
-    </AppShell>
+    <PageShell
+      eyebrow="Helpful Links"
+      title="Resources"
+      accent="MAPS · INFO · MORE"
+    >
+      <Text c="#3d1f0f" size="sm">
+        Resources and helpful information will be added here.
+      </Text>
+    </PageShell>
   );
 }

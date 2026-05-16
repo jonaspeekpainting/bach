@@ -15,13 +15,11 @@ import {
   Box,
   Card,
   Grid,
-  ThemeIcon,
   Progress,
 } from "@mantine/core";
-import { IconTrophy, IconMedal, IconAward } from "@tabler/icons-react";
 import type { LeaderboardData, TeamPoints } from "@/app/api/leaderboard/route";
 import type { Team } from "@/app/api/teams/route";
-import { TEAMS as DEFAULT_TEAMS } from "@/lib/constants";
+import { TEAMS as DEFAULT_TEAMS, TEAM_HEX } from "@/lib/constants";
 
 interface TeamTotal {
   teamId: string;
@@ -110,10 +108,11 @@ export function LeaderboardDisplay() {
       totalPoints += teamPoints;
     });
 
+    const defaults = DEFAULT_TEAMS.find((t) => t.id === team.id);
     return {
       teamId: team.id,
       teamName: team.name,
-      color: team.color,
+      color: defaults?.color ?? team.color,
       totalPoints,
       gamePoints,
     };
@@ -124,29 +123,15 @@ export function LeaderboardDisplay() {
 
   const maxPoints = Math.max(...teamTotals.map((t) => t.totalPoints), 1);
 
-  const getRankIcon = (rank: number) => {
-    if (rank === 1) return <IconTrophy size={24} />;
-    if (rank === 2) return <IconMedal size={24} />;
-    if (rank === 3) return <IconAward size={24} />;
-    return null;
-  };
-
-  const getRankColor = (rank: number) => {
-    if (rank === 1) return "gold";
-    if (rank === 2) return "blue";
-    if (rank === 3) return "gray";
-    return "dark";
-  };
-
   const games = Object.keys(data.gamePoints || {});
 
   return (
-    <Container size="lg" pb={0}>
+    <Container size="lg" p={0}>
       <Stack gap="xl">
         <Group justify="space-between" align="center">
-          <Title order={1} c="white">Team Leaderboard</Title>
+          <Title order={1} c="#2c1810">Team Leaderboard</Title>
           {data.lastUpdated && (
-            <Text size="sm" c="white">
+            <Text size="sm" c="#6b4423">
               Last updated: {new Date(data.lastUpdated).toLocaleString()}
             </Text>
           )}
@@ -166,46 +151,25 @@ export function LeaderboardDisplay() {
                   radius="md"
                   withBorder
                   style={{
-                    borderColor:
-                      rank === 1
-                        ? "var(--mantine-color-yellow-6)"
-                        : undefined,
-                    borderWidth: rank === 1 ? 2 : 1,
+                    borderLeft: `4px solid ${TEAM_HEX[team.teamId as keyof typeof TEAM_HEX]}`,
                   }}
                 >
                   <Stack gap="sm">
-                    <Group justify="space-between" align="center">
-                      <Group gap="xs">
-                        {getRankIcon(rank) && (
-                          <ThemeIcon
-                            color={getRankColor(rank)}
-                            variant="light"
-                            size="lg"
-                            radius="xl"
-                          >
-                            {getRankIcon(rank)}
-                          </ThemeIcon>
-                        )}
-                        <Text fw={700} size="xl" c="dark.9">
-                          {team.teamName}
-                        </Text>
-                      </Group>
-                      <Badge
-                        color={getRankColor(rank)}
-                        size="xl"
-                        variant={rank === 1 ? "filled" : "light"}
+                    <Group justify="space-between" align="flex-start" wrap="nowrap" gap="xs">
+                      <Text
+                        fw={700}
+                        size="lg"
+                        c="dark.9"
+                        style={{ lineHeight: 1.2, flex: 1, minWidth: 0 }}
                       >
-                        #{rank}
-                      </Badge>
+                        {team.teamName}
+                      </Text>
                     </Group>
 
                     <Box>
                       <Group justify="space-between" mb="xs">
                         <Text fw={600} size="lg" c="dark.9">
                           {team.totalPoints} pts
-                        </Text>
-                        <Text size="sm" c="dimmed">
-                          {percentage.toFixed(0)}%
                         </Text>
                       </Group>
                       <Progress
@@ -254,7 +218,7 @@ export function LeaderboardDisplay() {
                               >
                                 {points}
                               </Badge>
-                              <Text size="xs" c="dimmed">
+                              <Text size="xs" c="#6b4423">
                                 {team.name}
                               </Text>
                             </Group>
@@ -314,7 +278,7 @@ export function LeaderboardDisplay() {
 
         {games.length === 0 && (
           <Paper p="md" withBorder>
-            <Text c="dimmed" ta="center">
+            <Text c="#6b4423" ta="center">
               No game points entered yet. Points will appear here once games are completed.
             </Text>
           </Paper>

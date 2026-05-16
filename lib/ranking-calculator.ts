@@ -77,13 +77,9 @@ export function calculateOverallRankings(
       attendee,
       averageScore: 0,
       rank: 0,
-      categoryScores: {
-        golf: 0,
-        americanChallenge: 0,
-        athleticism: 0,
-        drinkingGame: 0,
-        drugHandling: 0,
-      },
+      categoryScores: Object.fromEntries(
+        CATEGORIES.map((c) => [c.key, 0])
+      ) as Record<CategoryKey, number>,
     }));
   }
 

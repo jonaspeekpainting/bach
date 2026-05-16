@@ -1,0 +1,213 @@
+/* Shared bachelor-party theme (matches itinerary) */
+
+.themeRoot {
+  box-sizing: border-box;
+  font-family: var(--font-bach-inter), system-ui, sans-serif;
+  background: linear-gradient(180deg, #f5e6d3 0%, #e8c9a0 50%, #d4a574 100%);
+  color: #2c1810;
+  min-height: 100%;
+  padding: 40px 20px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+}
+
+.themeRoot *,
+.themeRoot *::before,
+.themeRoot *::after {
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  background: #faf3e7;
+  border: 2px solid #8b4513;
+  box-shadow: 0 20px 60px rgba(80, 30, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(
+    90deg,
+    #c1440e 0%,
+    #e8a33d 25%,
+    #d4a574 50%,
+    #6b8e4e 75%,
+    #2e5a7e 100%
+  );
+  z-index: 1;
+}
+
+/* ─── Hero ─────────────────────────────────────────────────────── */
+
+.hero {
+  text-align: center;
+  padding: 60px 24px 40px;
+  background: radial-gradient(ellipse at top, #f4d4a8 0%, #faf3e7 70%);
+}
+
+.heroSubtitle {
+  font-family: var(--font-bach-inter), sans-serif;
+  font-size: 10px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: #c1440e;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.heroTitle {
+  font-family: var(--font-bach-bebas), sans-serif;
+  font-size: clamp(40px, 8vw, 64px);
+  line-height: 0.95;
+  color: #2c1810;
+  letter-spacing: 2px;
+  margin: 0 0 12px;
+  word-spacing: 4px;
+}
+
+.accent {
+  color: #c1440e;
+  display: block;
+  font-size: clamp(20px, 4vw, 32px);
+  letter-spacing: 5px;
+  margin-top: 10px;
+}
+
+/* ─── Section divider ───────────────────────────────────────────── */
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 28px 40px;
+  background: #faf3e7;
+}
+
+.dividerLine {
+  flex: 1;
+  max-width: 220px;
+  height: 1px;
+  background: #e8a33d;
+}
+
+.dividerDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e8a33d;
+  flex-shrink: 0;
+}
+
+/* ─── Content area ──────────────────────────────────────────────── */
+
+.content {
+  padding: 8px 28px 40px;
+}
+
+.contentFlush {
+  padding-bottom: 0;
+}
+
+.closing {
+  background: transparent;
+  text-align: center;
+  padding: 40px 20px 32px;
+  font-family: var(--font-bach-bebas), sans-serif;
+  font-size: 18px;
+  letter-spacing: 6px;
+  color: #2c1810;
+}
+
+/* ─── Mantine overrides inside themed pages ─────────────────────── */
+
+.themeRoot :global(.mantine-Paper-root) {
+  background: #fffef9;
+  border-color: #e0ceb0;
+}
+
+.themeRoot :global(.mantine-Tabs-tab) {
+  color: #6b4423;
+}
+
+.themeRoot :global(.mantine-Tabs-tab[data-active]) {
+  color: #c1440e;
+  border-color: #c1440e;
+}
+
+.themeRoot :global(.mantine-Tabs-list) {
+  border-color: #e0ceb0;
+}
+
+.themeRoot :global(.mantine-Table-th),
+.themeRoot :global(.mantine-Table-td) {
+  border-color: #e0ceb0;
+}
+
+.themeRoot :global(.mantine-Button-root[data-variant="filled"]) {
+  background: #c1440e;
+}
+
+.themeRoot :global(.mantine-Button-root[data-variant="filled"]:hover) {
+  background: #a3380c;
+}
+
+/* Center content in the main column beside the sidebar (desktop admin) */
+@media (min-width: 48em) {
+  .themeRootDesktopNav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .themeRootDesktopNav .container {
+    width: 100%;
+    max-width: 880px;
+    margin-inline: auto;
+  }
+
+  /* Home page (bare): full-bleed sections span main column; cards stay centered */
+  .themeRootDesktopNav > * {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .themeRoot {
+    padding: 24px 12px;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .content {
+    padding: 8px 16px 32px;
+  }
+
+  .divider {
+    padding: 22px 24px;
+  }
+
+  .hero {
+    padding: 48px 20px 32px;
+  }
+}
+
+@media print {
+  .themeRoot {
+    background: white;
+    padding: 0;
+  }
+
+  .container {
+    box-shadow: none;
+    border: none;
+  }
+}

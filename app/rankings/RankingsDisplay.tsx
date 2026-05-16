@@ -13,19 +13,13 @@ import {
   Alert,
   Group,
 } from "@mantine/core";
-import { CATEGORIES } from "@/lib/constants";
+import { CATEGORIES, type CategoryKey } from "@/lib/constants";
 import type { CategoryRanking, OverallRanking } from "@/lib/ranking-calculator";
 import type { RankingSubmission } from "@/lib/edge-config";
 
 interface RankingsData {
   submissions: RankingSubmission[];
-  categoryRankings: {
-    golf: CategoryRanking[];
-    americanChallenge: CategoryRanking[];
-    athleticism: CategoryRanking[];
-    drinkingGame: CategoryRanking[];
-    drugHandling: CategoryRanking[];
-  };
+  categoryRankings: Record<CategoryKey, CategoryRanking[]>;
   overallRankings: OverallRanking[];
 }
 
@@ -59,7 +53,7 @@ export function RankingsDisplay() {
 
   if (loading) {
     return (
-      <Container py="xl">
+      <Container p={0}>
         <Group justify="center">
           <Loader size="lg" />
         </Group>
@@ -69,7 +63,7 @@ export function RankingsDisplay() {
 
   if (error) {
     return (
-      <Container py="xl">
+      <Container p={0}>
         <Alert color="red" title="Error">
           {error}
         </Alert>
@@ -89,10 +83,10 @@ export function RankingsDisplay() {
   };
 
   return (
-    <Container size="lg" pt="xl" pb={0}>
+    <Container size="lg" p={0}>
       <Stack gap="xl">
         <Group justify="space-between" align="center">
-          <Title order={1} c="dimmed">Overall Rankings</Title>
+          <Title order={1} c="#2c1810">Overall Rankings</Title>
           <Badge size="lg" variant="light">
             {data.submissions.length} {data.submissions.length === 1 ? "submission" : "submissions"}
           </Badge>
@@ -144,7 +138,7 @@ export function RankingsDisplay() {
           </div>
         </Paper>
 
-        <Title order={2} c="dimmed">Category Rankings</Title>
+        <Title order={2} c="#2c1810">Category Rankings</Title>
         {CATEGORIES.map((category) => {
           const categoryRankings =
             data.categoryRankings[
