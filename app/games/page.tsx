@@ -36,7 +36,7 @@ const games: Game[] = [
     name: "Scramble",
     chippies: "12-8-4-0",
     description:
-      "Golf — Scramble. Final score for ranking. Birdies are +1, Eagles are +3. Closest to the pin and longest drive are each +3. Teams with 3 rotate someone who gets two shots on every hole.",
+      "Golf — Scramble. Final score for ranking. Birdies are +1, Eagles are +3, Doubles or Worse -2. Closest to the pin and longest drive are each +3. Teams with 3 rotate someone who gets two shots on every hole.",
     icon: IconGolf,
     color: "green",
   },
@@ -303,6 +303,22 @@ export default function GamesPage() {
               </ThemeIcon>
               <Text size="xs" c="#c1440e" fw={500} style={{ flex: 1 }}>
                 All additional rules are no longer valid after the completion of survivor (the last game)
+              </Text>
+            </Group>
+            <Group gap="xs" align="flex-start" mt="xs">
+              <ThemeIcon color="red" variant="light" size="xs" radius="sm">
+                <IconClock size={12} />
+              </ThemeIcon>
+              <Text size="xs" c="#c1440e" fw={500} style={{ flex: 1 }}>
+                Winners split the pot.
+              </Text>
+            </Group>
+            <Group gap="xs" align="flex-start" mt="xs">
+              <ThemeIcon color="red" variant="light" size="xs" radius="sm">
+                <IconClock size={12} />
+              </ThemeIcon>
+              <Text size="xs" c="#c1440e" fw={500} style={{ flex: 1 }}>
+                Losers have to wear vegas shirts for trip home.
               </Text>
             </Group>
           </Stack>
