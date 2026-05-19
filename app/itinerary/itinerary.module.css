@@ -116,9 +116,9 @@
 
 .scheduleItem {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: 16px;
-  padding: 7px 32px 7px 24px;
+  padding: 9px 32px 9px 24px;
 }
 
 .time {
@@ -136,11 +136,25 @@
 .colorDesert .time { color: #b8743a; }
 .colorPool   .time { color: #2e5a7e; }
 
+.itemBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
 .itemTitle {
   font-weight: 600;
   color: #2c1810;
   font-size: 15px;
   line-height: 1.4;
+}
+
+.itemDetails {
+  font-size: 13px;
+  color: #6b5344;
+  line-height: 1.45;
+  font-weight: 400;
 }
 
 @media (max-width: 600px) {

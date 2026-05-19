@@ -36,7 +36,7 @@ const games: Game[] = [
     name: "Scramble",
     chippies: "12-8-4-0",
     description:
-      "Golf — Scramble. Final score for ranking. Birdies are +1, Eagles are +3, Doubles or Worse -2. Closest to the pin and longest drive are each +3. Teams with 3 rotate someone who gets two shots on every hole.",
+      "Golf — Scramble. Final score for ranking. Birdies are +1, Eagles are +3, Bogeys -1, Doubles or Worse -3. Closest to the pin and longest drive are each +3. Teams with 3 rotate someone who gets two shots on every hole.",
     icon: IconGolf,
     color: "green",
   },
@@ -295,6 +295,14 @@ export default function GamesPage() {
               </ThemeIcon>
               <Text size="xs" c="#3d1f0f" style={{ flex: 1 }}>
                 Cleanly completed shotgun at any point throughout the weekend = 0.5 chippies
+              </Text>
+            </Group>
+            <Group gap="xs" align="flex-start">
+              <ThemeIcon color="green" variant="light" size="xs" radius="sm">
+                <IconBottle size={12} />
+              </ThemeIcon>
+              <Text size="xs" c="#3d1f0f" style={{ flex: 1 }}>
+                For all 18 hole rounds, longest drive is +3 and closest to the pin is +3. Players can bring in points to the draft from the round Thursday.
               </Text>
             </Group>
             <Group gap="xs" align="flex-start" mt="xs">
