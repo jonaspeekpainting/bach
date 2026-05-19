@@ -11,7 +11,7 @@ import {
 } from "@tabler/icons-react";
 
 /** Force nav on for everyone (e.g. launch). Otherwise nav shows when admin is true. */
-export const SHOW_NAV = true;
+export const SHOW_NAV = false;
 
 export const NAVBAR_WIDTH = 200;
 
