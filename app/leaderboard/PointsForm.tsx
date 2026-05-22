@@ -36,7 +36,6 @@ export function PointsForm() {
   const [teams, setTeams] = useState<Team[]>([...DEFAULT_TEAMS]);
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const [miscLabel, setMiscLabel] = useState("");
-  const [existingMiscLabels, setExistingMiscLabels] = useState<string[]>([]);
   const [teamPoints, setTeamPoints] = useState<TeamPoints>({ ...EMPTY_POINTS });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,28 +43,13 @@ export function PointsForm() {
 
   useEffect(() => {
     fetchTeams();
-    fetchMiscLabels();
   }, []);
 
   useEffect(() => {
     if (mode === "game" && selectedGame) {
-      fetchPoints("game", selectedGame);
+      fetchGamePoints(selectedGame);
     }
   }, [mode, selectedGame]);
-
-  useEffect(() => {
-    if (mode !== "misc") return;
-    const trimmed = miscLabel.trim();
-    if (!trimmed) {
-      setTeamPoints({ ...EMPTY_POINTS });
-      return;
-    }
-    if (existingMiscLabels.includes(trimmed)) {
-      fetchPoints("misc", trimmed);
-    } else {
-      setTeamPoints({ ...EMPTY_POINTS });
-    }
-  }, [mode, miscLabel, existingMiscLabels]);
 
   const fetchTeams = async () => {
     try {
@@ -79,30 +63,16 @@ export function PointsForm() {
     }
   };
 
-  const fetchMiscLabels = async () => {
+  const fetchGamePoints = async (gameName: string) => {
     try {
       const response = await fetch("/api/leaderboard");
       if (response.ok) {
         const data = await response.json();
-        setExistingMiscLabels(Object.keys(data.miscPoints || {}));
-      }
-    } catch (err) {
-      console.error("Error fetching misc labels:", err);
-    }
-  };
-
-  const fetchPoints = async (pointsMode: PointsMode, label: string) => {
-    try {
-      const response = await fetch("/api/leaderboard");
-      if (response.ok) {
-        const data = await response.json();
-        const bucket =
-          pointsMode === "game" ? data.gamePoints : data.miscPoints;
-        const existingPoints = bucket?.[label];
+        const existingPoints = data.gamePoints?.[gameName];
         setTeamPoints(existingPoints ? { ...existingPoints } : { ...EMPTY_POINTS });
       }
     } catch (err) {
-      console.error("Error fetching points:", err);
+      console.error("Error fetching game points:", err);
     }
   };
 
@@ -120,8 +90,7 @@ export function PointsForm() {
   };
 
   const handleSubmit = async () => {
-    const label =
-      mode === "game" ? selectedGame : miscLabel.trim();
+    const label = mode === "game" ? selectedGame : miscLabel.trim();
 
     if (!label) {
       setError(
@@ -153,7 +122,8 @@ export function PointsForm() {
 
       setSuccess(true);
       if (mode === "misc") {
-        await fetchMiscLabels();
+        setMiscLabel("");
+        resetForm();
       }
       setTimeout(() => {
         setSuccess(false);
@@ -167,7 +137,8 @@ export function PointsForm() {
   };
 
   const activeLabel = mode === "game" ? selectedGame : miscLabel.trim();
-  const showPointsEntry = mode === "game" ? Boolean(selectedGame) : Boolean(miscLabel.trim());
+  const showPointsEntry =
+    mode === "game" ? Boolean(selectedGame) : Boolean(miscLabel.trim());
 
   if (!isAdmin) {
     return (
@@ -228,35 +199,16 @@ export function PointsForm() {
             }}
           />
         ) : (
-          <Stack gap="sm">
-            {existingMiscLabels.length > 0 && (
-              <Select
-                label="Edit existing misc entry"
-                placeholder="Pick to edit, or type a new one below"
-                data={existingMiscLabels}
-                value={existingMiscLabels.includes(miscLabel) ? miscLabel : null}
-                onChange={(value) => {
-                  if (value) setMiscLabel(value);
-                }}
-                clearable
-                searchable
-                styles={{
-                  option: { color: "#2c1810" },
-                  dropdown: { color: "#2c1810" },
-                }}
-              />
-            )}
-            <TextInput
-              label="Description"
-              placeholder="e.g. Breakfast bonus, Late penalty, Side bet"
-              value={miscLabel}
-              onChange={(e) => setMiscLabel(e.currentTarget.value)}
-              required
-              styles={{
-                input: { color: "#2c1810" },
-              }}
-            />
-          </Stack>
+          <TextInput
+            label="Description"
+            placeholder="e.g. Breakfast bonus, Late penalty, Side bet"
+            value={miscLabel}
+            onChange={(e) => setMiscLabel(e.currentTarget.value)}
+            required
+            styles={{
+              input: { color: "#2c1810" },
+            }}
+          />
         )}
 
         {showPointsEntry && (
@@ -285,8 +237,9 @@ export function PointsForm() {
                         })
                       }
                       min={mode === "misc" ? undefined : 0}
-                      step={1}
-                      allowDecimal={false}
+                      step={mode === "misc" ? 0.5 : 1}
+                      decimalScale={mode === "misc" ? 1 : 0}
+                      allowDecimal={mode === "misc"}
                       allowNegative={mode === "misc"}
                       placeholder="0"
                       styles={{
