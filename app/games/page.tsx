@@ -114,24 +114,21 @@ const games: Game[] = [
   {
     name: "Survivor",
     chippies: "6-4-2-0",
-    description:
-      "Round robin for seeding and then championship game and losers match.",
+    description: "4 Team Double elimination.",
     icon: IconTarget,
     color: "indigo",
   },
   {
     name: "21 Cup",
-    chippies: "6-4-2-0",
-    description:
-      "Round robin for seeding and then championship game and losers match.",
+    chippies: "12-8-4-0",
+    description: "4 Team Double elimination.",
     icon: IconGlassFull,
     color: "teal",
   },
   {
     name: "Civil War",
     chippies: "6-4-2-0",
-    description:
-      "Round robin for seeding and then championship game and losers match.",
+    description: "4 Team Double elimination.",
     icon: IconSword,
     color: "red",
   },
@@ -252,9 +249,22 @@ export default function GamesPage() {
             </ThemeIcon>
             <Title order={3} c="#2c1810">Tie Rules</Title>
           </Group>
-          <Text size="xs" c="#3d1f0f">
-            If there is a tie in any of the games, the chippies for those two slots are added and split.
-          </Text>
+          <Stack gap="xs">
+            <Text size="xs" c="#3d1f0f">
+              If there is a tie in any of the games, the chippies for those two slots are added and split.
+            </Text>
+            <Text size="xs" c="#3d1f0f" fw={600}>
+              In the event of round robin ties:
+            </Text>
+            <Stack gap={4} component="ol" style={{ margin: 0, paddingLeft: "1.25rem" }}>
+              <Text component="li" size="xs" c="#3d1f0f">
+                Head-to-head record (who won the match between the tied teams)
+              </Text>
+              <Text component="li" size="xs" c="#3d1f0f">
+                Point or goal differential across all matches
+              </Text>
+            </Stack>
+          </Stack>
         </Paper>
 
         <Paper p={{ base: "sm", sm: "md" }} withBorder style={{ borderLeft: "4px solid #b8743a" }}>

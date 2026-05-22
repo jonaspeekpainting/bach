@@ -1,22 +1,59 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { PageShell } from "@/components/PageShell";
+import { BREAKFAST_DUTY, TEAM_SHIRT, TEAMS } from "@/lib/constants";
 import styles from "./itinerary.module.css";
+
+type TeamId = (typeof TEAMS)[number]["id"];
+
+function TeamDuty({ team, label }: { team: TeamId; label: string }) {
+  const shirt = TEAM_SHIRT[team];
+  return (
+    <span className={styles.teamDuty} style={{ color: shirt.text }}>
+      <span
+        className={styles.teamSwatch}
+        style={{
+          background: shirt.fill,
+          border: `1px solid ${shirt.border}`,
+        }}
+      />
+      {shirt.label} team — {label}
+    </span>
+  );
+}
 
 function Entry({
   time,
   title,
   details,
+  breakfastDuty,
 }: {
   time: string;
   title: string;
   details?: string;
+  breakfastDuty?: { cook: TeamId; cleanup: TeamId };
 }) {
+  const cookShirt = breakfastDuty ? TEAM_SHIRT[breakfastDuty.cook] : null;
+
   return (
-    <li className={styles.scheduleItem}>
+    <li
+      className={`${styles.scheduleItem}${cookShirt ? ` ${styles.breakfastItem}` : ""}`}
+      style={
+        cookShirt
+          ? ({ "--breakfast-team-border": cookShirt.border } as CSSProperties)
+          : undefined
+      }
+    >
       <span className={styles.time}>{time}</span>
       <div className={styles.itemBody}>
         <span className={styles.itemTitle}>{title}</span>
+        {breakfastDuty ? (
+          <div className={styles.teamDutyList}>
+            <TeamDuty team={breakfastDuty.cook} label="breakfast" />
+            <TeamDuty team={breakfastDuty.cleanup} label="cleanup" />
+          </div>
+        ) : null}
         {details ? <span className={styles.itemDetails}>{details}</span> : null}
       </div>
     </li>
@@ -152,6 +189,7 @@ export default function ItineraryPage() {
                 time="AM"
                 title="Breakfast at the House"
                 details="Mimosas & Bloodys"
+                breakfastDuty={BREAKFAST_DUTY.friday}
               />
               <Entry
                 time="AM"
@@ -192,7 +230,11 @@ export default function ItineraryPage() {
         <div className={styles.dayRight}>
           <div className={styles.scheduleWrap}>
             <ul className={styles.scheduleList}>
-              <Entry time="AM" title="Breakfast at the Course" />
+              <Entry
+                time="AM"
+                title="Breakfast at the Course"
+                breakfastDuty={BREAKFAST_DUTY.saturday}
+              />
               <Entry
                 time="8:30 AM"
                 title="Golf at Coral Canyon"
@@ -233,6 +275,7 @@ export default function ItineraryPage() {
                 time="AM"
                 title="Breakfast at the House"
                 details="Mimosas & Bloodys"
+                breakfastDuty={BREAKFAST_DUTY.sunday}
               />
               <Entry
                 time="10:45 AM"
@@ -268,6 +311,11 @@ export default function ItineraryPage() {
         <div className={styles.dayRight}>
           <div className={styles.scheduleWrap}>
             <ul className={styles.scheduleList}>
+              <Entry
+                time="AM"
+                title="Breakfast"
+                breakfastDuty={BREAKFAST_DUTY.monday}
+              />
               <Entry
                 time="11:00 AM"
                 title="Checkout · Horseshoe"

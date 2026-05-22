@@ -157,6 +157,35 @@
   font-weight: 400;
 }
 
+.teamDutyList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.teamDuty {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.teamSwatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.breakfastItem .itemBody {
+  border-left: 3px solid var(--breakfast-team-border);
+  padding-left: 12px;
+  margin-left: -3px;
+}
+
 @media (max-width: 600px) {
   .dayRow {
     flex-direction: column;

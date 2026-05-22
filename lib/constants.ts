@@ -55,3 +55,25 @@ export const TEAM_HEX: Record<(typeof TEAMS)[number]["id"], string> = {
   team3: "#e03131",
   team4: "#2f9e44",
 };
+
+/** Shirt colors shown on the itinerary */
+export const TEAM_SHIRT: Record<
+  (typeof TEAMS)[number]["id"],
+  { label: string; fill: string; border: string; text: string }
+> = {
+  team1: { label: "White", fill: "#ffffff", border: "#c4b8a8", text: "#2c1810" },
+  team2: { label: "Blue", fill: "#e8eef8", border: "#4169e1", text: "#1e3a6e" },
+  team3: { label: "Red", fill: "#fde8e8", border: "#e03131", text: "#862e2e" },
+  team4: { label: "Green", fill: "#e6f4ea", border: "#2f9e44", text: "#1b5e2a" },
+};
+
+/** Cook + cleanup teams each morning (Fri → Mon) */
+export const BREAKFAST_DUTY: Record<
+  "friday" | "saturday" | "sunday" | "monday",
+  { cook: (typeof TEAMS)[number]["id"]; cleanup: (typeof TEAMS)[number]["id"] }
+> = {
+  friday: { cook: "team1", cleanup: "team2" },
+  saturday: { cook: "team4", cleanup: "team3" },
+  sunday: { cook: "team2", cleanup: "team4" },
+  monday: { cook: "team3", cleanup: "team1" },
+};
