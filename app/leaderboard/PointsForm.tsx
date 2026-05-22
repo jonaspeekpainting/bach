@@ -15,36 +15,57 @@ import {
   Divider,
   Badge,
   Grid,
+  SegmentedControl,
+  TextInput,
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import type { TeamPoints } from "@/app/api/leaderboard/route";
 import type { Team } from "@/app/api/teams/route";
 import { GAMES, TEAMS as DEFAULT_TEAMS } from "@/lib/constants";
 
+const EMPTY_POINTS: TeamPoints = { team1: 0, team2: 0, team3: 0, team4: 0 };
+
+type PointsMode = "game" | "misc";
+
 export function PointsForm() {
   const [isAdmin] = useLocalStorage<boolean>({
     key: "admin",
     defaultValue: false,
   });
+  const [mode, setMode] = useState<PointsMode>("game");
   const [teams, setTeams] = useState<Team[]>([...DEFAULT_TEAMS]);
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
-  const [teamPoints, setTeamPoints] = useState<TeamPoints>({
-    team1: 0,
-    team2: 0,
-    team3: 0,
-    team4: 0,
-  });
+  const [miscLabel, setMiscLabel] = useState("");
+  const [existingMiscLabels, setExistingMiscLabels] = useState<string[]>([]);
+  const [teamPoints, setTeamPoints] = useState<TeamPoints>({ ...EMPTY_POINTS });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     fetchTeams();
-    // Load existing points for selected game
-    if (selectedGame) {
-      fetchGamePoints(selectedGame);
+    fetchMiscLabels();
+  }, []);
+
+  useEffect(() => {
+    if (mode === "game" && selectedGame) {
+      fetchPoints("game", selectedGame);
     }
-  }, [selectedGame]);
+  }, [mode, selectedGame]);
+
+  useEffect(() => {
+    if (mode !== "misc") return;
+    const trimmed = miscLabel.trim();
+    if (!trimmed) {
+      setTeamPoints({ ...EMPTY_POINTS });
+      return;
+    }
+    if (existingMiscLabels.includes(trimmed)) {
+      fetchPoints("misc", trimmed);
+    } else {
+      setTeamPoints({ ...EMPTY_POINTS });
+    }
+  }, [mode, miscLabel, existingMiscLabels]);
 
   const fetchTeams = async () => {
     try {
@@ -58,26 +79,54 @@ export function PointsForm() {
     }
   };
 
-  const fetchGamePoints = async (gameName: string) => {
+  const fetchMiscLabels = async () => {
     try {
       const response = await fetch("/api/leaderboard");
       if (response.ok) {
         const data = await response.json();
-        const existingPoints = data.gamePoints?.[gameName];
-        if (existingPoints) {
-          setTeamPoints(existingPoints);
-        } else {
-          setTeamPoints({ team1: 0, team2: 0, team3: 0, team4: 0 });
-        }
+        setExistingMiscLabels(Object.keys(data.miscPoints || {}));
       }
     } catch (err) {
-      console.error("Error fetching game points:", err);
+      console.error("Error fetching misc labels:", err);
     }
   };
 
+  const fetchPoints = async (pointsMode: PointsMode, label: string) => {
+    try {
+      const response = await fetch("/api/leaderboard");
+      if (response.ok) {
+        const data = await response.json();
+        const bucket =
+          pointsMode === "game" ? data.gamePoints : data.miscPoints;
+        const existingPoints = bucket?.[label];
+        setTeamPoints(existingPoints ? { ...existingPoints } : { ...EMPTY_POINTS });
+      }
+    } catch (err) {
+      console.error("Error fetching points:", err);
+    }
+  };
+
+  const resetForm = () => {
+    setTeamPoints({ ...EMPTY_POINTS });
+    setError(null);
+    setSuccess(false);
+  };
+
+  const handleModeChange = (value: string) => {
+    setMode(value as PointsMode);
+    resetForm();
+    setSelectedGame(null);
+    setMiscLabel("");
+  };
+
   const handleSubmit = async () => {
-    if (!selectedGame) {
-      setError("Please select a game");
+    const label =
+      mode === "game" ? selectedGame : miscLabel.trim();
+
+    if (!label) {
+      setError(
+        mode === "game" ? "Please select a game" : "Please enter a description"
+      );
       return;
     }
 
@@ -86,15 +135,15 @@ export function PointsForm() {
     setLoading(true);
 
     try {
+      const body =
+        mode === "game"
+          ? { gameName: label, teamPoints }
+          : { miscLabel: label, teamPoints };
+
       const response = await fetch("/api/leaderboard", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          gameName: selectedGame,
-          teamPoints,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -103,9 +152,11 @@ export function PointsForm() {
       }
 
       setSuccess(true);
+      if (mode === "misc") {
+        await fetchMiscLabels();
+      }
       setTimeout(() => {
         setSuccess(false);
-        // Optionally reload the page to show updated leaderboard
         window.location.reload();
       }, 2000);
     } catch (err) {
@@ -114,6 +165,9 @@ export function PointsForm() {
       setLoading(false);
     }
   };
+
+  const activeLabel = mode === "game" ? selectedGame : miscLabel.trim();
+  const showPointsEntry = mode === "game" ? Boolean(selectedGame) : Boolean(miscLabel.trim());
 
   if (!isAdmin) {
     return (
@@ -130,10 +184,22 @@ export function PointsForm() {
   return (
     <Container size="md" p={0}>
       <Stack gap="lg">
-        <Title order={2} c="#2c1810">Enter Game Points</Title>
+        <Title order={2} c="#2c1810">
+          Enter Points
+        </Title>
         <Text size="sm" c="#3d1f0f">
-          Select a game and enter the points earned by each team.
+          Record game results or one-off misc points (bonuses, penalties, side bets, etc.).
         </Text>
+
+        <SegmentedControl
+          value={mode}
+          onChange={handleModeChange}
+          data={[
+            { label: "Game points", value: "game" },
+            { label: "Misc points", value: "misc" },
+          ]}
+          fullWidth
+        />
 
         {error && (
           <Alert color="red" title="Error">
@@ -147,26 +213,58 @@ export function PointsForm() {
           </Alert>
         )}
 
-        <Select
-          label="Game"
-          placeholder="Select a game"
-          data={GAMES}
-          value={selectedGame}
-          onChange={setSelectedGame}
-          required
-          searchable
-          styles={{
-            option: { color: "#2c1810" },
-            dropdown: { color: "#2c1810" },
-          }}
-        />
+        {mode === "game" ? (
+          <Select
+            label="Game"
+            placeholder="Select a game"
+            data={GAMES}
+            value={selectedGame}
+            onChange={setSelectedGame}
+            required
+            searchable
+            styles={{
+              option: { color: "#2c1810" },
+              dropdown: { color: "#2c1810" },
+            }}
+          />
+        ) : (
+          <Stack gap="sm">
+            {existingMiscLabels.length > 0 && (
+              <Select
+                label="Edit existing misc entry"
+                placeholder="Pick to edit, or type a new one below"
+                data={existingMiscLabels}
+                value={existingMiscLabels.includes(miscLabel) ? miscLabel : null}
+                onChange={(value) => {
+                  if (value) setMiscLabel(value);
+                }}
+                clearable
+                searchable
+                styles={{
+                  option: { color: "#2c1810" },
+                  dropdown: { color: "#2c1810" },
+                }}
+              />
+            )}
+            <TextInput
+              label="Description"
+              placeholder="e.g. Breakfast bonus, Late penalty, Side bet"
+              value={miscLabel}
+              onChange={(e) => setMiscLabel(e.currentTarget.value)}
+              required
+              styles={{
+                input: { color: "#2c1810" },
+              }}
+            />
+          </Stack>
+        )}
 
-        {selectedGame && (
+        {showPointsEntry && (
           <>
             <Divider />
             <Paper p="md" withBorder>
               <Title order={4} mb="md" c="dark.9">
-                Points for {selectedGame}
+                Points for {activeLabel}
               </Title>
               <Grid>
                 {teams.map((team) => (
@@ -186,9 +284,10 @@ export function PointsForm() {
                           [team.id]: typeof value === "number" ? value : 0,
                         })
                       }
-                      min={0}
+                      min={mode === "misc" ? undefined : 0}
                       step={1}
                       allowDecimal={false}
+                      allowNegative={mode === "misc"}
                       placeholder="0"
                       styles={{
                         input: {
@@ -207,7 +306,7 @@ export function PointsForm() {
               loading={loading}
               fullWidth
             >
-              Save Points
+              Save {mode === "game" ? "Game" : "Misc"} Points
             </Button>
           </>
         )}

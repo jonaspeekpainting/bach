@@ -27,6 +27,8 @@ interface TeamTotal {
   color: string;
   totalPoints: number;
   gamePoints: Record<string, number>;
+  miscPoints: Record<string, number>;
+  miscTotal: number;
 }
 
 export function LeaderboardDisplay() {
@@ -97,24 +99,36 @@ export function LeaderboardDisplay() {
     return null;
   }
 
+  const sumBucket = (
+    bucket: Record<string, TeamPoints> | undefined,
+    teamId: string,
+    into: Record<string, number>
+  ) => {
+    let subtotal = 0;
+    Object.entries(bucket || {}).forEach(([label, points]) => {
+      const pts = points[teamId as keyof TeamPoints] || 0;
+      into[label] = pts;
+      subtotal += pts;
+    });
+    return subtotal;
+  };
+
   // Calculate totals for each team
   const teamTotals: TeamTotal[] = teams.map((team) => {
-    let totalPoints = 0;
     const gamePoints: Record<string, number> = {};
-
-    Object.entries(data.gamePoints || {}).forEach(([gameName, points]) => {
-      const teamPoints = points[team.id as keyof TeamPoints] || 0;
-      gamePoints[gameName] = teamPoints;
-      totalPoints += teamPoints;
-    });
+    const miscPoints: Record<string, number> = {};
+    const gameTotal = sumBucket(data.gamePoints, team.id, gamePoints);
+    const miscTotal = sumBucket(data.miscPoints, team.id, miscPoints);
 
     const defaults = DEFAULT_TEAMS.find((t) => t.id === team.id);
     return {
       teamId: team.id,
       teamName: team.name,
       color: defaults?.color ?? team.color,
-      totalPoints,
+      totalPoints: gameTotal + miscTotal,
       gamePoints,
+      miscPoints,
+      miscTotal,
     };
   });
 
@@ -124,6 +138,97 @@ export function LeaderboardDisplay() {
   const maxPoints = Math.max(...teamTotals.map((t) => t.totalPoints), 1);
 
   const games = Object.keys(data.gamePoints || {});
+  const miscEntries = Object.keys(data.miscPoints || {});
+
+  const renderPointsTable = (
+    title: string,
+    labels: string[],
+    bucket: Record<string, TeamPoints> | undefined
+  ) => {
+    if (labels.length === 0) return null;
+
+    return (
+      <Paper p="md" withBorder mb="md">
+        <Title order={3} mb="md" c="dark.9">
+          {title}
+        </Title>
+
+        <Box hiddenFrom="sm">
+          <Stack gap="md">
+            {labels.map((label) => (
+              <Paper key={label} p="sm" withBorder>
+                <Text fw={600} size="sm" mb="sm" c="dark.9">
+                  {label}
+                </Text>
+                <Grid>
+                  {teams.map((team) => {
+                    const points =
+                      bucket?.[label]?.[team.id as keyof TeamPoints] || 0;
+                    return (
+                      <Grid.Col key={team.id} span={6}>
+                        <Group gap="xs" wrap="nowrap">
+                          <Badge
+                            color={team.color}
+                            variant={points > 0 ? "light" : "outline"}
+                            size="sm"
+                          >
+                            {points}
+                          </Badge>
+                          <Text size="xs" c="#6b4423">
+                            {team.name}
+                          </Text>
+                        </Group>
+                      </Grid.Col>
+                    );
+                  })}
+                </Grid>
+              </Paper>
+            ))}
+          </Stack>
+        </Box>
+
+        <Table.ScrollContainer minWidth={600} visibleFrom="sm">
+          <Table striped highlightOnHover>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th c="dark.9">{title === "Misc Points" ? "Entry" : "Game"}</Table.Th>
+                {teams.map((team) => (
+                  <Table.Th key={team.id} c="dark.9">
+                    {team.name}
+                  </Table.Th>
+                ))}
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {labels.map((label) => (
+                <Table.Tr key={label}>
+                  <Table.Td>
+                    <Text fw={500} c="dark.9">
+                      {label}
+                    </Text>
+                  </Table.Td>
+                  {teams.map((team) => {
+                    const points =
+                      bucket?.[label]?.[team.id as keyof TeamPoints] || 0;
+                    return (
+                      <Table.Td key={team.id}>
+                        <Badge
+                          color={team.color}
+                          variant={points > 0 ? "light" : "outline"}
+                        >
+                          {points}
+                        </Badge>
+                      </Table.Td>
+                    );
+                  })}
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
+      </Paper>
+    );
+  };
 
   return (
     <Container size="lg" p={0}>
@@ -172,6 +277,11 @@ export function LeaderboardDisplay() {
                           {team.totalPoints} pts
                         </Text>
                       </Group>
+                      {team.miscTotal > 0 && (
+                        <Text size="xs" c="#6b4423" mb="xs">
+                          incl. {team.miscTotal} misc
+                        </Text>
+                      )}
                       <Progress
                         value={percentage}
                         color={team.color}
@@ -187,99 +297,13 @@ export function LeaderboardDisplay() {
           })}
         </Grid>
 
-        {/* Detailed Table */}
-        {games.length > 0 && (
-          <Paper p="md" withBorder mb="md" >
-            <Title order={3} mb="md" c="dark.9">
-              Points by Game
-            </Title>
-            
-            {/* Mobile Card View */}
-            <Box hiddenFrom="sm">
-              <Stack gap="md">
-                {games.map((gameName) => (
-                  <Paper key={gameName} p="sm" withBorder>
-                    <Text fw={600} size="sm" mb="sm" c="dark.9">
-                      {gameName}
-                    </Text>
-                    <Grid>
-                      {teams.map((team) => {
-                        const points =
-                          data.gamePoints[gameName]?.[
-                            team.id as keyof TeamPoints
-                          ] || 0;
-                        return (
-                          <Grid.Col key={team.id} span={6}>
-                            <Group gap="xs" wrap="nowrap">
-                              <Badge
-                                color={team.color}
-                                variant={points > 0 ? "light" : "outline"}
-                                size="sm"
-                              >
-                                {points}
-                              </Badge>
-                              <Text size="xs" c="#6b4423">
-                                {team.name}
-                              </Text>
-                            </Group>
-                          </Grid.Col>
-                        );
-                      })}
-                    </Grid>
-                  </Paper>
-                ))}
-              </Stack>
-            </Box>
+        {renderPointsTable("Points by Game", games, data.gamePoints)}
+        {renderPointsTable("Misc Points", miscEntries, data.miscPoints)}
 
-            {/* Desktop Table View */}
-            <Table.ScrollContainer minWidth={600} visibleFrom="sm">
-              <Table striped highlightOnHover>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th c="dark.9">Game</Table.Th>
-                    {teams.map((team) => (
-                      <Table.Th key={team.id} c="dark.9">
-                        {team.name}
-                      </Table.Th>
-                    ))}
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {games.map((gameName) => (
-                    <Table.Tr key={gameName}>
-                      <Table.Td>
-                        <Text fw={500} c="dark.9">
-                          {gameName}
-                        </Text>
-                      </Table.Td>
-                      {teams.map((team) => {
-                        const points =
-                          data.gamePoints[gameName]?.[
-                            team.id as keyof TeamPoints
-                          ] || 0;
-                        return (
-                          <Table.Td key={team.id}>
-                            <Badge
-                              color={team.color}
-                              variant={points > 0 ? "light" : "outline"}
-                            >
-                              {points}
-                            </Badge>
-                          </Table.Td>
-                        );
-                      })}
-                    </Table.Tr>
-                  ))}
-                </Table.Tbody>
-              </Table>
-            </Table.ScrollContainer>
-          </Paper>
-        )}
-
-        {games.length === 0 && (
+        {games.length === 0 && miscEntries.length === 0 && (
           <Paper p="md" withBorder>
             <Text c="#6b4423" ta="center">
-              No game points entered yet. Points will appear here once games are completed.
+              No points entered yet. Game and misc points will appear here once recorded.
             </Text>
           </Paper>
         )}

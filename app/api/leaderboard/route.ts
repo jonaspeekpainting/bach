@@ -14,6 +14,7 @@ export interface GamePoints {
 
 export interface LeaderboardData {
   gamePoints: GamePoints;
+  miscPoints?: GamePoints;
   lastUpdated?: string;
 }
 
@@ -83,7 +84,7 @@ async function writeToEdgeConfig(data: LeaderboardData): Promise<boolean> {
 export async function GET() {
   try {
     const leaderboard = await get<LeaderboardData>("leaderboard");
-    const data: LeaderboardData = leaderboard || { gamePoints: {} };
+    const data: LeaderboardData = leaderboard || { gamePoints: {}, miscPoints: {} };
 
     return NextResponse.json(data);
   } catch (error) {
@@ -95,44 +96,64 @@ export async function GET() {
   }
 }
 
+function isValidTeamPoints(teamPoints: unknown): teamPoints is TeamPoints {
+  if (!teamPoints || typeof teamPoints !== "object") return false;
+  const tp = teamPoints as TeamPoints;
+  return (
+    typeof tp.team1 === "number" &&
+    typeof tp.team2 === "number" &&
+    typeof tp.team3 === "number" &&
+    typeof tp.team4 === "number"
+  );
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { gameName, teamPoints } = body;
+    const { gameName, miscLabel, teamPoints } = body;
 
-    if (!gameName || !teamPoints) {
+    const isGame = Boolean(gameName);
+    const isMisc = Boolean(miscLabel);
+
+    if ((!isGame && !isMisc) || (isGame && isMisc) || !teamPoints) {
       return NextResponse.json(
-        { error: "Missing gameName or teamPoints" },
+        { error: "Provide either gameName or miscLabel (not both), plus teamPoints" },
         { status: 400 }
       );
     }
 
-    // Validate teamPoints structure
-    if (
-      typeof teamPoints.team1 !== "number" ||
-      typeof teamPoints.team2 !== "number" ||
-      typeof teamPoints.team3 !== "number" ||
-      typeof teamPoints.team4 !== "number"
-    ) {
+    if (!isValidTeamPoints(teamPoints)) {
       return NextResponse.json(
         { error: "Invalid teamPoints structure" },
         { status: 400 }
       );
     }
 
+    const label = (isGame ? gameName : miscLabel) as string;
+
     // Get existing leaderboard data
     const existing = (await get<LeaderboardData>("leaderboard")) || {
       gamePoints: {},
+      miscPoints: {},
     };
 
-    // Update points for this game
     const updated: LeaderboardData = {
-      gamePoints: {
-        ...existing.gamePoints,
-        [gameName]: teamPoints,
-      },
+      gamePoints: existing.gamePoints || {},
+      miscPoints: existing.miscPoints || {},
       lastUpdated: new Date().toISOString(),
     };
+
+    if (isGame) {
+      updated.gamePoints = {
+        ...updated.gamePoints,
+        [label]: teamPoints,
+      };
+    } else {
+      updated.miscPoints = {
+        ...updated.miscPoints,
+        [label]: teamPoints,
+      };
+    }
 
     // Write to Edge Config
     const writeSuccess = await writeToEdgeConfig(updated);
