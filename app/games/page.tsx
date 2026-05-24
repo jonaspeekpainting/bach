@@ -134,7 +134,7 @@ const games: Game[] = [
   },
   {
     name: "Most Steps Walked on Saturday",
-    chippies: "6-4-2-0",
+    chippies: "3-2-1-0",
     description:
       "Must have an iPhone to be eligible — two members from the same team are able to get chippies. Tracking on Sunday morning.",
     icon: IconWalk,

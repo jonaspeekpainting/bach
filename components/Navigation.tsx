@@ -4,7 +4,6 @@ import { AppShell, NavLink, Stack, Group, Box } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  IconTrophy,
   IconDice,
   IconChartBar,
   IconClipboardList,
@@ -25,7 +24,6 @@ export function useShowNav() {
 
 const navItems = [
   { label: "Itinerary", href: "/itinerary", icon: IconClipboardList },
-  { label: "Rankings", href: "/rankings", icon: IconTrophy },
   { label: "Leaderboard", href: "/leaderboard", icon: IconChartBar },
   { label: "Games", href: "/games", icon: IconDice },
 ];
